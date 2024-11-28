@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/client_layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-3 ltn__breadcrumb-color-white bg-overlay-theme-white-90 bg-image plr--9---"
+         th:attr="data-bg=@{/client_assets/img/bg/9.jpg}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h6 class="section-subtitle ltn__secondary-color">Chào mừng đến với cửa hàng</h6>
+                            <h1 class="section-title white-color">Cửa hàng</h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li>Cửa hàng</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+    <span class="d-none" id="messageSuccess" th:text="${message}"></span>
+    <!-- WISHLIST AREA START -->
+    <div class="liton__wishlist-area pb-70">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- PRODUCT TAB AREA START -->
+                    <div class="ltn__product-tab-area">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="ltn__tab-menu-list mb-50">
+                                        <div class="nav">
+                                            <a class="active show" data-bs-toggle="tab" href="#liton_tab_1_1">Bảng điều khiển <i class="fas fa-home"></i></a>
+                                            <a data-bs-toggle="tab" href="#liton_tab_1_2">Đơn hàng <i class="fas fa-file-alt"></i></a>
+                                            <a data-bs-toggle="tab" href="#liton_tab_1_4">Đổi mật khẩu <i class="fas fa-map-marker-alt"></i></a>
+                                            <a data-bs-toggle="tab" href="#liton_tab_1_5">Chi tiết tài khoản <i class="fas fa-user"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade active show" id="liton_tab_1_1">
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <p>Xin chào <strong th:text="${fullName}"></strong></p>
+                                                <p>Từ bảng điều khiển tài khoản của bạn, bạn có thể xem các <span>đơn hàng gần đây</span>, quản lý <span>địa chỉ giao hàng và thanh toán</span>, và <span>chỉnh sửa mật khẩu và chi tiết tài khoản</span>.</p>
+                                            </div>
+                                        </div>
+                                        <div th:if="${not #lists.isEmpty(orders)}" class="tab-pane fade" th:id="${'liton_tab_1_2'}">
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Đơn hàng</th>
+                                                            <th>Ngày</th>
+                                                            <th>Tình trạng</th>
+                                                            <th>Tổng cộng</th>
+                                                            <th>Chi tiết</th>
+                                                            <th>Hủy</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody id="orders-body">
+<!--                                                        <tr th:each="order :${orders}">-->
+<!--                                                            <td style="font-weight: bold">#<span style="font-weight: bold" th:text="${order.id}"></span></td>-->
+<!--                                                            <td th:text="${order.date_purchase}"></td>-->
+<!--                                                            <td style="font-weight: bold" th:text="${order.status_order.name}"></td>-->
+<!--                                                            <td><span th:text="${#numbers.formatDecimal(order.total_money, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ</td>-->
+<!--                                                            <td><a th:href="@{/order_details/{id}(id=${order.id})}">View</a></td>-->
+<!--                                                            <td>-->
+<!--                                                                <a style="font-weight: bold; cursor: pointer" th:if="${order.status_order.id == 1}" th:onclick="'cancelOrder(\'' + ${order.id} + '\')'"-->
+<!--                                                                   title="cancel order" class="text-danger">Cancel</a>-->
+<!--                                                            </td>-->
+<!--                                                        </tr>-->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div th:if="${#lists.isEmpty(orders)}" class="tab-pane fade" th:id="${'liton_tab_1_2'}">
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <div class="table-responsive">
+                                                    <h3>
+                                                        Đơn hàng của bạn đang trống!
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="liton_tab_1_4">
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <p>Đổi mật khẩu</p>
+
+                                                    <div class="ltn__form-box">
+                                                        <form th:action="@{/account/changepassword}" method="post" th:object="${user}">
+                                                            <input th:field="*{id}" type="hidden">
+                                                            <div class="row mb-50">
+                                                                <div class="col-md-6">
+                                                                    <label>Mật khẩu cũ:</label>
+                                                                    <input required type="password" name="oldpassword">
+                                                                </div>
+
+                                                                <div class="col-md-6">
+                                                                    <label>Mật khẩu mới</label>
+                                                                    <input required type="password" name="newpassword" id="password"  >
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label>Xác nhận mật khẩu mới:</label>
+                                                                    <input required type="password" name="confirmnewpassword" id="confirmpassword" oninput="checkPasswordMatch(this);">
+                                                                </div>
+                                                            </div>
+                                                            <!--                                                        <fieldset>-->
+                                                            <!--                                                            <legend>Password change</legend>-->
+                                                            <!--                                                            <div class="row">-->
+                                                            <!--                                                                <div class="col-md-12">-->
+                                                            <!--                                                                    <label>Current password (leave blank to leave unchanged):</label>-->
+                                                            <!--                                                                    <input type="password" name="current_pass">-->
+                                                            <!--                                                                    <label>New password (leave blank to leave unchanged):</label>-->
+                                                            <!--                                                                    <input type="password" id="password" name="new_pass">-->
+                                                            <!--                                                                    <label>Confirm new password:</label>-->
+                                                            <!--                                                                    <input type="password" name="ltn__lastname" oninput="checkPasswordMatch(this);">-->
+                                                            <!--                                                                </div>-->
+                                                            <!--                                                            </div>-->
+                                                            <!--                                                        </fieldset>-->
+                                                            <div class="btn-wrapper">
+                                                                <button type="submit" class="btn theme-btn-1 btn-effect-1 text-uppercase"> Thay đổi mật khẩu</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="liton_tab_1_5">
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <p>Các địa chỉ sau đây sẽ được sử dụng mặc định trên trang thanh toán.</p>
+                                              <div class="ltn__form-box">
+                                                    <form th:action="@{/account/edit}" method="post" th:object="${user}">
+                                                        <input th:field="*{id}" type="hidden">
+                                                        <div class="row mb-50">
+                                                            <div class="col-md-6">
+                                                                <label>Họ và tên:</label>
+                                                                <input th:field="*{full_name}" required type="text" name="ltn__name">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Số điện thoại:</label>
+                                                                <input th:field="*{phone}" required type="text" name="ltn__lastname">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Username:</label>
+                                                                <input th:field="*{username}" readonly type="text" name="ltn__lastname" placeholder="Ethan">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Email:</label>
+                                                                <input th:field="*{email}" required type="email" name="ltn__lastname" placeholder="example@example.com">
+                                                            </div>
+                                                        </div>
+<!--                                                        <fieldset>-->
+<!--                                                            <legend>Password change</legend>-->
+<!--                                                            <div class="row">-->
+<!--                                                                <div class="col-md-12">-->
+<!--                                                                    <label>Current password (leave blank to leave unchanged):</label>-->
+<!--                                                                    <input type="password" name="current_pass">-->
+<!--                                                                    <label>New password (leave blank to leave unchanged):</label>-->
+<!--                                                                    <input type="password" id="password" name="new_pass">-->
+<!--                                                                    <label>Confirm new password:</label>-->
+<!--                                                                    <input type="password" name="ltn__lastname" oninput="checkPasswordMatch(this);">-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+<!--                                                        </fieldset>-->
+                                                        <div class="btn-wrapper">
+                                                            <button type="submit" class="btn theme-btn-1 btn-effect-1 text-uppercase">Lưu thay đổi</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PRODUCT TAB AREA END -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- WISHLIST AREA START -->
+
+    <!-- FEATURE AREA START ( Feature - 3) -->
+<!--    <div class="ltn__feature-area before-bg-bottom-2 mb&#45;&#45;30-&#45;&#45; plr&#45;&#45;5">-->
+<!--        <div class="container-fluid">-->
+<!--            <div class="row">-->
+<!--                <div class="col-lg-12">-->
+<!--                    <div class="ltn__feature-item-box-wrap ltn__border-between-column white-bg">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-xl-3 col-md-6 col-12">-->
+<!--                                <div class="ltn__feature-item ltn__feature-item-8">-->
+<!--                                    <div class="ltn__feature-icon">-->
+<!--                                        <img th:src="@{/client_assets/img/icons/icon-img/11.png}" alt="#">-->
+<!--                                    </div>-->
+<!--                                    <div class="ltn__feature-info">-->
+<!--                                        <h4>Sản phẩm tuyển chọn </h4>-->
+<!--                                        <p>Cung cấp sản phẩm được tuyển chọn</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-xl-3 col-md-6 col-12">-->
+<!--                                <div class="ltn__feature-item ltn__feature-item-8">-->
+<!--                                    <div class="ltn__feature-icon">-->
+<!--                                        <img th:src="@{/client_assets/img/icons/icon-img/12.png}" alt="#">-->
+<!--                                    </div>-->
+<!--                                    <div class="ltn__feature-info">-->
+<!--                                        <h4>Handmade</h4>-->
+<!--                                        <p>We ensure the product quality-->
+<!--                                            that is our main goal</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-xl-3 col-md-6 col-12">-->
+<!--                                <div class="ltn__feature-item ltn__feature-item-8">-->
+<!--                                    <div class="ltn__feature-icon">-->
+<!--                                        <img th:src="@{/client_assets/img/icons/icon-img/13.png}" alt="#">-->
+<!--                                    </div>-->
+<!--                                    <div class="ltn__feature-info">-->
+<!--                                        <h4>Natural Food</h4>-->
+<!--                                        <p>Return product within 3 days-->
+<!--                                            for any product you buy</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-xl-3 col-md-6 col-12">-->
+<!--                                <div class="ltn__feature-item ltn__feature-item-8">-->
+<!--                                    <div class="ltn__feature-icon">-->
+<!--                                        <img th:src="@{/client_assets/img/icons/icon-img/14.png}" alt="#">-->
+<!--                                    </div>-->
+<!--                                    <div class="ltn__feature-info">-->
+<!--                                        <h4>Free home delivery</h4>-->
+<!--                                        <p>We ensure the product quality-->
+<!--                                            that you can trust easily</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <!-- FEATURE AREA END -->
+
+    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+    <script th:inline="javascript">
+        function checkPasswordMatch(fieldConfirmPassword) {
+            if (fieldConfirmPassword.value != $("#password").val()) {
+                fieldConfirmPassword.setCustomValidity("Passwords do not match!");
+            } else {
+                fieldConfirmPassword.setCustomValidity("");
+            }
+        }
+        function fomartedDate(date){
+            var date = new Date(date);
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var formattedDate = day + '/' + month + '/' + year;
+
+            return formattedDate;
+        }
+        function updateOrders(){
+            $.ajax({
+                url: '/getOrders',
+                type: 'GET',
+                success: function (data) {
+                    let order_body = '';
+                    $.each(data, function(i, order) {
+                        order_body += '<tr>';
+                        order_body += '<td style="font-weight: bold">#<span style="font-weight: bold">' + order.id + '</span></td>';
+                        order_body += '<td>' + fomartedDate(order.date_purchase) + '</td>';
+                        order_body += '<td style="font-weight: bold">' + order.status_name + '</td>';
+                        order_body += '<td><span>' + formatPrice(order.total_money) + '</span> VNĐ</td>';
+                        order_body += '<td><a href="/order_details/' + order.id + '">View</a></td>';
+                        order_body += '<td>';
+
+                        if (order.status_id == 1) {
+                            order_body += '<a style="font-weight: bold; cursor: pointer" ' +
+                                'onclick="cancelOrder(' + order.id + ')" title="cancel order" class="text-danger">Cancel</a>';
+                        }
+                        order_body += '</td>';
+                        order_body += '</tr>';
+                    });
+                    $('#orders-body').html(order_body);
+                }
+            });
+        }
+        function cancelOrder(OrderId){
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+            }
+            var result = confirm('Are you sure you want to cancel order: #' + OrderId + '?');
+            if (result === true) {
+                $.ajax({
+                    url: '/cancel_order/' + OrderId,
+                    type: 'GET',
+                    success: function () {
+                        updateOrders();
+                        toastr.success('Order: #' + OrderId + ' has been canceled.')
+                    }
+                });
+            }
+        }
+
+
+        $(document).ready(function (){
+           updateOrders();
+        });
+
+        $(document).ready(function () {
+            var message = $('#messageSuccess').text();
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+            }
+            if (message !== '') {
+                toastr.success(message);
+            }
+        });
+
+    </script>
+</div>
+</body>
+</html>

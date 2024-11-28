@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new product</title>
+    <!-- web fonts -->
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+    <!--    &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+    <!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.1/css/bootstrap.min.css" rel="stylesheet">-->
+    <!--    &lt;!&ndash; Summernote CSS &ndash;&gt;-->
+    <!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="style/styleCss.css"/>-->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">Thêm sản phẩm</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a th:href="@{/admin/product}">Sản phẩm</a></li>
+                        <li class="breadcrumb-item active">Thêm sản phẩm</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Thông tin sản phẩm</h4></div>
+                <div class="card-body">
+                    <form th:action="@{/admin/product/add}" th:object="${product}"
+                          enctype="multipart/form-data" method="post">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="productname">Tên</label>
+                                    <input th:field="*{name}" id="productname" name="productname" type="text"
+                                           class="form-control">
+                                    <div style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="price">Giá</label>
+                                    <input th:field="*{price}" id="price" name="price" type="text" class="form-control">
+                                    <div style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="quantity">Số lượng</label>
+                                    <input th:field="*{quantity}" id="quantity" th:value="1" name="quantity" min="1" type="number"
+                                           class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="image">Image</label>
+                                    <input required id="image" name="image" type="file" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="control-label">Thể loại</label>
+                                    <select class="form-control select2" name="category.id">
+                                        <option th:each="category: ${categories}" th:value="${category.id}"
+                                                th:text="${category.name}"></option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-12">
+                                <label for="productdesc">Mô tả</label>
+                                <textarea th:field="*{description}" class="form-control" id="productdesc"
+                                          rows="5"></textarea>
+                                <div style="text-align: left; margin-top: 13px">
+                                    <span class="alert alert-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <input type="submit" value="Lưu thay đổi" class="btn btn-primary waves-effect waves-light">
+                            <a th:href="@{/admin/product}" type="button"
+                               class="btn btn-secondary waves-effect waves-light">Thoát</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+    <script>
+        $('#productdesc').summernote({
+            placeholder: 'Description here...',
+            tabsize: 2,
+            height: 300
+        });
+    </script>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View details</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">Xem Chi tiết</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a th:href="@{/admin/order}">Đặt hàng</a></li>
+                        <li class="breadcrumb-item active">Xem Chi tiết</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-sm-4">
+<!--                            <div class="search-box me-2 mb-2 d-inline-block">-->
+<!--                                <div class="position-relative">-->
+<!--                                    <input type="text" class="form-control" placeholder="Search...">-->
+<!--                                    <i class="bx bx-search-alt search-icon"></i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-nowrap table-check" id="orderDetails">
+                            <thead class="table-light">
+                            <tr>
+                                <th class="align-middle">Id đơn hàng</th>
+                                <th class="align-middle">Tên sản phẩm</th>
+                                <th class="align-middle">Số lượng</th>
+                                <th class="align-middle">Giá</th>
+                                <th class="align-middle">Tổng cộng</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="temp: ${order_details}">
+                                <td><a class="text-body fw-bold">#<span th:text="${temp.orders.id}"></span></a> </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img class="img-fluid rounded" th:src="@{${temp.product.imagesPath}}" style="max-width: 60px" alt="">
+                                        <h6 class="m-b-0 m-l-10" th:text="${temp.product.name}"></h6>
+                                    </div>
+                                </td>
+                                <td><span th:text="${temp.quantity}"></span></td>
+                                <td><span th:text="${#numbers.formatDecimal(temp.product.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ</td>
+                                <td><span th:text="${#numbers.formatDecimal(temp.total_money, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+    <script th:inline="javascript">
+    </script>
+</div>
+
+</body>
+</html>

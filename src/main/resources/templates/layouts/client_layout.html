@@ -1,0 +1,849 @@
+<!doctype html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>CNF - CHILL&FREE COFFEE</title>
+    <meta name="robots" content="noindex, follow"/>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Place favicon.png in the root directory -->
+    <link rel="icon" th:href="@{/client_assets/img/favicon.png}" type="/image/x-icon"/>
+    <!-- Font Icons css -->
+    <link rel="stylesheet" th:href="@{/client_assets/css/font-icons.css}">
+    <!-- plugins css -->
+    <link rel="stylesheet" th:href="@{/client_assets/css/plugins.css}">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" th:href="@{/client_assets/css/style.css}">
+    <!-- Responsive css -->
+    <link rel="stylesheet" th:href="@{/client_assets/css/responsive.css}">
+    <!-- ToaStr   -->
+    <link rel="stylesheet" th:href="@{/client_assets/css/toastr.css}">
+    <!-- Icons Css -->
+    <link th:href="@{/assets/css/icons.min.css}" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+
+<!-- Body main wrapper start -->
+<div class="body-wrapper">
+
+    <!-- HEADER AREA START (header-5) -->
+    <header class="ltn__header-area ltn__header-5 ltn__header-transparent gradient-color-4---">
+        <!-- ltn__header-top-area start -->
+        <div class="ltn__header-top-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="ltn__top-bar-menu">
+                            <ul>
+                                <li><a href="locations.html"><i class="icon-placeholder"></i>ĐAN PHƯỢNG, TP.HÀ NỘI</a></li>
+                                <li><a href="mailto:info@webmail.com?Subject=Flower%20greetings%20to%20you"><i
+                                        class="icon-mail"></i>ducmanh16022002@gmail.com</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="top-bar-right  text-end">
+                            <div class="ltn__top-bar-menu">
+                                <ul>
+                                    <li>
+                                        <!-- ltn__language-menu -->
+                                        <div class="ltn__drop-menu ltn__currency-menu ltn__language-menu">
+                                            <ul>
+                                                <li><a href="#" class="dropdown-toggle"><span class="active-currency">Tiếng Anh</span></a>
+                                                    <ul>
+                                                        <li><a href="#">Tiếng Việt</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <!-- ltn__social-media -->
+                                        <div class="ltn__social-media">
+                                            <ul>
+                                                <li><a href="https://www.facebook.com/profile.php?id=100011716313008" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                                </li>
+                                                <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+
+                                                <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                                                </li>
+                                                <li><a href="#" title="Dribbble"><i class="fab fa-dribbble"></i></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ltn__header-top-area end -->
+
+        <!-- ltn__header-middle-area start -->
+        <div class="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-white ltn__logo-right-menu-option sticky-active-into-mobile--- plr--9---">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="site-logo-wrap">
+                            <div class="site-logo">
+                                <a href="/"><img th:src="@{/client_assets/img/logo.png}" alt="Logo"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col header-menu-column menu-color-white---">
+                        <div class="header-menu d-none d-xl-block">
+                            <nav>
+                                <div class="ltn__main-menu">
+                                    <ul>
+                                        <li><a th:href="@{/}">Trang chủ</a></li>
+<!--                                        <li><a href="/about">About</a></li>-->
+                                        <li><a href="/product">Cửa hàng</a></li>
+                                        <li><a href="/contact">Liên hệ</a></li>
+                                        <li sec:authorize="hasAnyAuthority('ADMIN')"><a th:href="@{/admin}">Quản lý</a>
+                                        </li>
+                                        <li sec:authorize="hasAnyAuthority('STAFF','ADMIN')"><a th:href="@{/staff/table/desklist}">Nhân viên</a>
+                                        </li>
+                                        <li sec:authorize="isAuthenticated()"><a style="color:#80B500;">Xin chào, <span
+                                                th:text="${#authentication.principal.getFullName()}"></span></a></li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="ltn__header-options ltn__header-options-2">
+                        <!-- header-search-1 -->
+                        <div class="header-search-wrap">
+                            <div onclick="removeList()" class="header-search-1">
+                                <div class="search-icon">
+                                    <i class="icon-search for-search-show"></i>
+                                    <i class="icon-cancel  for-search-close"></i>
+                                </div>
+                            </div>
+                            <div class="header-search-1-form">
+                                <form th:action="@{/search/product}" method="post">
+                                    <input required type="text" id="keyword" name="keyword" placeholder="Search here..."/>
+                                    <button type="submit">
+                                        <span><i class="icon-search"></i></span>
+                                    </button>
+                                </form>
+                            </div>
+                            <div id="search-frame">
+
+                            </div>
+<!--                            <div style="top: 311%; height: 400px; background-color: unset; box-shadow: none;" class="header-search-1-form">-->
+<!--                                <ul id="product-list-search" style="background-color: #fff; padding: 0;">-->
+
+<!--                                </ul>-->
+<!--                            </div>-->
+                        </div>
+                        <!-- user-menu -->
+                        <div class="ltn__drop-menu user-menu">
+                            <ul>
+                                <li>
+                                    <a href="#"><i class="icon-user"></i></a>
+                                    <ul>
+                                        <li sec:authorize="!isAuthenticated()"><a href="/login">Đăng nhập</a></li>
+                                        <li sec:authorize="isAuthenticated()">
+                                            <form th:action="@{/logout}" method="post">
+                                                <button type="submit" style="all: unset; cursor: pointer">
+                                                    <a>Đăng xuất</a>
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li sec:authorize="isAuthenticated()"><a href="/account">Thông tin cá nhân</a></li>
+                                        <li><a href="/wishlist">Danh sách yêu thích</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- mini-cart -->
+                        <!--                        th:text="${session.totalItems == null} ? '0': ${session.totalItems}"-->
+                        <div class="mini-cart-icon">
+                            <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle">
+                                <i class="icon-shopping-cart"></i>
+                                <sup id="total_items"></sup>
+                            </a>
+                        </div>
+                        <!-- mini-cart -->
+                        <!-- Mobile Menu Button -->
+                        <div class="mobile-menu-toggle d-xl-none">
+                            <a href="#ltn__utilize-mobile-menu" class="ltn__utilize-toggle">
+                                <svg viewBox="0 0 800 600">
+                                    <path d="M300,220 C300,220 520,220 540,220 C740,220 640,540 520,420 C440,340 300,200 300,200"
+                                          id="top"></path>
+                                    <path d="M300,320 L540,320" id="middle"></path>
+                                    <path d="M300,210 C300,210 520,210 540,210 C740,210 640,530 520,410 C440,330 300,190 300,190"
+                                          id="bottom"
+                                          transform="translate(480, 320) scale(1, -1) translate(-480, -318) "></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ltn__header-middle-area end -->
+    </header>
+    <!-- HEADER AREA END -->
+
+
+    <!-- Utilize Cart Menu Start -->
+    <div id="ltn__utilize-cart-menu" class="ltn__utilize ltn__utilize-cart-menu">
+        <div class="ltn__utilize-menu-inner ltn__scrollbar">
+            <div class="ltn__utilize-menu-head">
+                <span class="ltn__utilize-menu-title">Giỏ hàng</span>
+                <button class="ltn__utilize-close">×</button>
+            </div>
+            <div class="mini-cart-product-area ltn__scrollbar">
+                <div id="body-cart">
+
+                </div>
+            </div>
+            <div class="mini-cart-footer">
+                <div id="footer-cart">
+
+                </div>
+                <p>Miễn phí vận chuyển cho đơn hàng từ 100,000 VND</p>
+            </div>
+        </div>
+    </div>
+    <!-- Utilize Cart Menu End -->
+
+    <!-- Utilize Mobile Menu Start -->
+    <div id="ltn__utilize-mobile-menu" class="ltn__utilize ltn__utilize-mobile-menu">
+        <div class="ltn__utilize-menu-inner ltn__scrollbar">
+            <div class="ltn__utilize-menu-head">
+                <div class="site-logo">
+                    <a href="/"><img th:src="@{/client_assets/img/logo.png}" alt="Logo"></a>
+                </div>
+                <button class="ltn__utilize-close">×</button>
+            </div>
+            <div class="ltn__utilize-menu-search-form">
+                <form action="#">
+                    <input type="text" placeholder="Search...">
+                    <button><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <div class="ltn__utilize-menu">
+                <ul>
+                    <li><a href="#">Trang chủ</a>
+                    </li>
+                    <li><a href="/product">Cửa hàng</a>
+                    </li>
+                    <li><a href="">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="ltn__utilize-buttons ltn__utilize-buttons-2">
+                <ul>
+                    <li>
+                        <a href="/account" title="My Account">
+                            <span class="utilize-btn-icon">
+                                <i class="far fa-user"></i>
+                            </span>
+                            Thông tin cá nhân
+                        </a>
+                    </li>
+                    <li>
+                        <a href="wishlist.html" title="Wishlist">
+                            <span class="utilize-btn-icon">
+                                <i class="far fa-heart"></i>
+                                <sup>3</sup>
+                            </span>
+                            Danh sách yêu thích
+                        </a>
+                    </li>
+                    <li>
+                        <a href="cart.html" title="Shoping Cart">
+                            <span class="utilize-btn-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                                <sup>5</sup>
+                            </span>
+                            Giỏ hàng
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="ltn__social-media-2">
+                <ul>
+                    <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+                    <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Utilize Mobile Menu End -->
+
+    <div class="ltn__utilize-overlay"></div>
+
+    <div layout:fragment="content">
+
+    </div>
+
+    <!-- FOOTER AREA START -->
+    <footer class="ltn__footer-area  ">
+        <div class="footer-top-area  section-bg-1 plr--5">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 col-sm-6 col-12">
+                        <div class="footer-widget footer-about-widget">
+                            <div class="footer-logo">
+                                <div class="site-logo">
+                                    <img th:src="@{/client_assets/img/logo.png}" alt="Logo">
+                                </div>
+                            </div>
+                            <p>Chill And Free Coffee</p>
+                            <div class="footer-address">
+                                <ul>
+                                    <li>
+                                        <div class="footer-address-icon">
+                                            <i class="icon-placeholder"></i>
+                                        </div>
+                                        <div class="footer-address-info">
+                                            <p>HÀ NỘI, Việt Nam</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="footer-address-icon">
+                                            <i class="icon-call"></i>
+                                        </div>
+                                        <div class="footer-address-info">
+                                            <p><a href="tel:0966315502">0966315502</a></p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="footer-address-icon">
+                                            <i class="icon-mail"></i>
+                                        </div>
+                                        <div class="footer-address-info">
+                                            <p><a href="mailto:ducmanh16022002@gmail.com">ducmanh16022002@gmail.com</a></p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="ltn__social-media mt-20">
+                                <ul>
+                                    <li><a href="https://www.facebook.com/profile.php?id=100011716313008" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+                                    <li><a href="#" title="Youtube"><i class="fab fa-youtube"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-6 col-sm-6 col-12">
+                        <div class="footer-widget footer-menu-widget clearfix">
+                            <h4 class="footer-title">Cửa hàng</h4>
+                            <div class="footer-menu">
+                                <ul>
+                                    <li><a href="">Giới thiệu</a></li>
+                                    <li><a href="">Blog</a></li>
+                                    <li><a href="">Tất cả sản phẩm</a></li>
+                                    <li><a href="">Bản đồ ví trị</a></li>
+                                    <li><a href="">Liên hệ chúng tôi</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-6 col-sm-6 col-12">
+                        <div class="footer-widget footer-menu-widget clearfix">
+                            <h4 class="footer-title">Dịch vụ.</h4>
+                            <div class="footer-menu">
+                                <ul>
+                                    <li><a href="">Danh sách yêu thích</a></li>
+                                    <li><a href="">Đăng nhập</a></li>
+                                    <li><a href="">Thông tin cá nhân</a></li>
+                                    <li><a href="">Điều khoản và điều kiện</a></li>
+                                    <li><a href="">Ưu đãi</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-6 col-sm-6 col-12">
+                        <div class="footer-widget footer-menu-widget clearfix">
+                            <h4 class="footer-title">Customer Care</h4>
+                            <div class="footer-menu">
+                                <ul>
+                                    <li><a href="">Đăng nhập</a></li>
+                                    <li><a href="">Thông tin cá nhân</a></li>
+                                    <li><a href="">Danh sách yêu thích</a></li>
+                                    <li><a href="">Theo dõi đơn hàng</a></li>
+                                    <li><a href="">Liên hệ chúng tôi</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-sm-12 col-12">
+                        <div class="footer-widget footer-newsletter-widget">
+                            <h4 class="footer-title">Bản tin</h4>
+                            <p>Đăng ký nhận bản tin hàng tuần của chúng tôi và nhận thông tin qua email.</p>
+                            <div class="footer-newsletter">
+                                <div id="mc_embed_signup">
+                                    <form action="https://gmail.us5.list-manage.com/subscribe/post?u=dde0a42ff09e8d43cad40dc82&amp;id=72d274d15d"
+                                          method="post" id="mc-embedded-subscribe-form"
+                                          name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                                        <div id="mc_embed_signup_scroll">
+                                            <div class="mc-field-group">
+                                                <input type="email" value="" name="EMAIL" class="required email"
+                                                       id="mce-EMAIL" placeholder="Email*">
+                                            </div>
+                                            <div id="mce-responses" class="clear">
+                                                <div class="response" id="mce-error-response"
+                                                     style="display:none"></div>
+                                                <div class="response" id="mce-success-response"
+                                                     style="display:none"></div>
+                                            </div>
+                                            <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                                            <div style="position: absolute; left: -5000px;" aria-hidden="true"><input
+                                                    type="text" name="b_dde0a42ff09e8d43cad40dc82_72d274d15d"
+                                                    tabindex="-1" value=""></div>
+                                            <div class="clear">
+                                                <div class="btn-wrapper">
+                                                    <button class="theme-btn-1 btn" type="submit" value="Subscribe"
+                                                            name="subscribe" id="mc-embedded-subscribe"><i
+                                                            class="fas fa-location-arrow"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <h5 class="mt-30">Chúng tôi chấp nhận</h5>
+                            <img th:src="@{/client_assets/img/icons/payment-4.png}" alt="Payment Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ltn__copyright-area ltn__copyright-2 section-bg-2  ltn__border-top-2--- plr--5">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="ltn__copyright-design clearfix">
+                            <p>All Rights Reserved @ Chill and Free Coffee <span class="current-year"></span></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 align-self-center">
+                        <div class="ltn__copyright-menu text-right text-end">
+                            <ul>
+                                <li><a href="#">Điều khoản và Điều kiện</a></li>
+                                <li><a href="#">Chính sách</a></li>
+                                <li><a href="#">Chính sách bảo mật</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- FOOTER AREA END -->
+
+    <!-- MODAL AREA START (Quick View Modal) -->
+    <div class="ltn__modal-area ltn__quick-view-modal-area">
+            <div class="modal fade" id="quick_view_modal" tabindex="-1">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                <!-- <i class="fas fa-times"></i> -->
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="ltn__quick-view-modal-inner">
+                                <div class="modal-product-item">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="modal-product-img">
+                                                <img id="QVImg" src="" alt="#">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="modal-product-info">
+                                                <div class="product-ratting">
+                                                    <ul>
+                                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                                        <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
+                                                        <li><a href="#"><i class="far fa-star"></i></a></li>
+                                                        <li class="review-total"><a href="#"> ( 95 Đánh giá )</a></li>
+                                                    </ul>
+                                                </div>
+                                                <h3 id="QVName">Vegetables Juices</h3>
+                                                <div class="product-price">
+                                                    <span id="QVPrice">$149.00</span>
+                                                    <!--                                                <del>$165.00</del>-->
+                                                </div>
+                                                <div class="modal-product-meta ltn__product-details-menu-1">
+                                                    <ul>
+                                                        <li>
+                                                            <strong>Categories:</strong>
+                                                            <span>
+                                                            <a href="#">Parts</a>
+                                                            <a href="#">Car</a>
+                                                            <a href="#">Seat</a>
+                                                            <a href="#">Cover</a>
+                                                        </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="ltn__product-details-menu-2">
+                                                    <ul>
+                                                        <li id="QVQuantity">
+                                                            <div class="cart-plus-minus">
+                                                                <input type="text" min="1" value="02" id="quantityQV" name="qtybutton"
+                                                                       class="cart-plus-minus-box">
+                                                            </div>
+                                                        </li>
+                                                        <li id="QVAddToCart">
+<!--                                                            <a href="#" class="theme-btn-1 btn btn-effect-1"-->
+<!--                                                               title="Add to Cart" data-bs-toggle="modal"-->
+<!--                                                               data-bs-target="#add_to_cart_modal"   th:attr="data-product-img=${product.imagesPath}, data-product-name=${product.name}"-->
+<!--                                                               th:onclick="'addToCart(this, \'' + ${product.id} + '\')'">-->
+<!--                                                                <i class="fas fa-shopping-cart"></i>-->
+<!--                                                                <span>ADD TO CART</span>-->
+<!--                                                            </a>-->
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="ltn__product-details-menu-3">
+                                                    <ul>
+                                                        <li id="QVWishlist">
+<!--                                                            <a href="#" class="" title="Wishlist" data-bs-toggle="modal"-->
+<!--                                                               data-bs-target="#liton_wishlist_modal">-->
+<!--                                                                <i class="far fa-heart"></i>-->
+<!--                                                                <span>Add to Wishlist</span>-->
+<!--                                                            </a>-->
+                                                        </li>
+                                                        <li>
+                                                            <a href="#" class="" title="Compare" data-bs-toggle="modal"
+                                                               data-bs-target="#quick_view_modal">
+                                                                <i class="fas fa-exchange-alt"></i>
+                                                                <span>Compare</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <hr>
+                                                <div class="ltn__social-media">
+                                                    <ul>
+                                                        <li>Share:</li>
+                                                        <li><a href="#" title="Facebook"><i
+                                                                class="fab fa-facebook-f"></i></a></li>
+                                                        <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                                                        </li>
+                                                        <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a>
+                                                        </li>
+                                                        <li><a href="#" title="Instagram"><i
+                                                                class="fab fa-instagram"></i></a></li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <!-- MODAL AREA END -->
+
+    <!-- MODAL AREA START (Add To Cart Modal) -->
+    <div class="ltn__modal-area ltn__add-to-cart-modal-area">
+        <div class="modal fade" id="add_to_cart_modal" tabindex="-1">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ltn__quick-view-modal-inner">
+                            <div class="modal-product-item">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="modal-product-img">
+                                            <img id="modalProductImg" src="" alt="#">
+                                        </div>
+                                        <div class="modal-product-info">
+                                            <h5><a href="#" id="modalProductName">Product Name</a></h5>
+                                            <p class="added-cart"><i class="fa fa-check-circle"></i> Successfully added
+                                                to your Cart</p>
+                                            <div class="btn-wrapper">
+                                                <a href="/cart" class="theme-btn-1 btn btn-effect-1">View Cart</a>
+                                                <a href="/cart/checkout"
+                                                   class="theme-btn-2 btn btn-effect-2">Thanh toán</a>
+                                            </div>
+                                        </div>
+                                        <!-- additional-info -->
+                                        <div class="additional-info d-none---">
+                                            <p>Chúng tôi muốn tặng bạn <b>giảm giá 10%</b> Cho đơn hàng đầu tiên của bạn, <br>Sử dụng mã giảm giá khi thanh toán</p>
+                                            <div class="payment-method">
+                                                <img th:src="@{/client_assets/img/icons/payment.png}" alt="#">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL AREA END -->
+
+    <!-- MODAL AREA START (Wishlist Modal) -->
+    <div class="ltn__modal-area ltn__add-to-cart-modal-area">
+        <div class="modal fade" id="liton_wishlist_modal" tabindex="-1">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ltn__quick-view-modal-inner">
+                            <div class="modal-product-item">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="modal-product-img">
+                                            <img id="modalWLProductImg" src="" alt="#">
+                                        </div>
+                                        <div class="modal-product-info">
+                                            <h5><a id="modalWLProductName" href="">Tên</a></h5>
+                                            <p class="added-cart"><i class="fa fa-check-circle"></i> Đã thêm vào danh sách yêu thích</p>
+                                            <div class="btn-wrapper">
+                                                <a href="/wishlist" class="theme-btn-1 btn btn-effect-1">Xem danh sách yêu thích</a>
+                                            </div>
+                                        </div>
+                                        <!-- additional-info -->
+                                        <div class="additional-info d-none">
+                                            <p>Chúng tôi muốn tặng bạn <b>giảm giá 10%</b> cho đơn hàng đầu tiên của bạn, <br> Sử dụng mã giảm giá khi thanh toán</p>
+                                            <div class="payment-method">
+                                                <img th:src="@{/client_assets/img/icons/payment.png}" alt="#">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL AREA END -->
+
+</div>
+<!-- Body main wrapper end -->
+
+<!-- preloader area start -->
+<div class="preloader d-none" id="preloader">
+    <div class="preloader-inner">
+        <div class="spinner">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+        </div>
+    </div>
+</div>
+<!-- preloader area end -->
+<script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: '/total_items',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $("#total_items").text(data);
+            }
+        });
+    });
+
+    function formatPrice(price) {
+        return price.toLocaleString('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }) + ' VNĐ';
+    }
+
+    function updateSumPrice() {
+        $.ajax({
+            url: '/getSumPrice',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                let formattedTotalPrice = formatPrice(data);
+                $("#sumPrice").text(formattedTotalPrice);
+            }
+        });
+    }
+
+    function updateCart() {
+        $.ajax({
+            url: '/getCart',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if (data.length > 0) {
+                    let bodyCartHTML = '';
+                    let footerCartHTML = '';
+
+                    $.each(data, function (i, item) {
+                        bodyCartHTML = bodyCartHTML + '<div class="mini-cart-item clearfix">' +
+                            '<div class="mini-cart-img">' +
+                            '<a href="/product/detail/' + item.productId + '">' +
+                            '<img src="' + item.img + '" alt="Image"></a>' +
+                            '<span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>' +
+                            '</div>' +
+                            '<div class="mini-cart-info">' +
+                            '<h6><a href="/product/detail/' + item.productId + '">' + item.productName + '</a></h6>' +
+                            '<span class="mini-cart-quantity">' +
+                            '<span>' + item.quantity + '</span> x ' +
+                            '<span>' + formatPrice(item.price) + '</span></span>' +
+                            '</div>' +
+                            '</div>';
+                    });
+
+                    footerCartHTML = footerCartHTML + '' +
+                        '<div class="mini-cart-sub-total">\n' +
+                        '    <h5>Subtotal: <span id="sumPrice">$310.00</span>\n' +
+                        '    </h5>\n' +
+                        '</div>\n' +
+                        '<div class="btn-wrapper">\n' +
+                        '    <a href="/cart" class="theme-btn-1 btn btn-effect-1">View Cart</a>\n' +
+                        '    <a href="/cart/checkout" class="theme-btn-2 btn btn-effect-2">Checkout</a>\n' +
+                        '</div>';
+
+                    $('#body-cart').empty();
+                    $('#footer-cart').empty();
+                    $('#body-cart').append(bodyCartHTML);
+                    $('#footer-cart').append(footerCartHTML);
+                    updateSumPrice();
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            url: '/getCart',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                let bodyHTML = '';
+                let footerHTML = '';
+                if (data.length === 0) {
+                    bodyHTML = bodyHTML + '<div class="mini-cart-item clearfix"><h3 class="mt-5">Your cart is empty</h3>\n' +
+                        '                        <p class="lead">Please add some products to your cart</p>\n' +
+                        '                   </div>';
+
+                    footerHTML = footerHTML + '<div class="btn-wrapper">\n' +
+                        '                           <a style="width: 100%" href="/product" class="theme-btn-1 btn btn-effect-1">Go to shop</a>\n' +
+                        '                      </div>';
+                    $('#body-cart').empty();
+                    $('#footer-cart').empty();
+                    $('#body-cart').append(bodyHTML);
+                    $('#footer-cart').append(footerHTML);
+                }
+                if (data.length > 0) {
+                    updateCart();
+                }
+            }
+        });
+    });
+</script>
+
+<!-- All JS Plugins -->
+<script th:src="@{/client_assets/js/plugins.js}"></script>
+<!-- Main JS -->
+<script th:src="@{/client_assets/js/main.js}"></script>
+<!--ToaStr-->
+<script th:src="@{/client_assets/js/toastr.js}"></script>
+
+<script>
+    function removeList(){
+        $("#product-list-search").empty();
+        $("#search-frame").empty();
+    }
+    $(document).ready(function() {
+        $("#keyword").keyup(function (){
+            var searchText = $("#keyword").val();
+            $('#search-frame').empty();
+            let frame = '';
+            frame = frame + '   <div style="top: 311%; height: 400px; background-color: unset; box-shadow: none;" class="header-search-1-form">\n' +
+                '                                <ul id="product-list-search" style="background-color: #fff; padding: 0;">\n' +
+                '\n' +
+                '                                </ul>\n' +
+                '                            </div>';
+            $('#search-frame').append(frame);
+            $.ajax({
+                url:'/search',
+                type: 'GET',
+                data: {searchText: searchText},
+                dataType: 'json',
+                success: function (data){
+                        if(data.length > 0){
+                        let list = '';
+                        $.each(data, function(i, item){
+                            list = list + '<li class="test">\n' +
+                                '                                        <a href="/product/detail/' + item.id + '">\n' +
+                                '                                            <div class="img-search">\n' +
+                                '                                                <img src="' + item.image + '" alt="">\n' +
+                                '                                            </div>\n' +
+                                '                                            <div class="body-search">\n' +
+                                '                                                <h4 class="title-search">' + item.name + '</h4>\n' +
+                                '                                                <div class="description-search">' + item.desc + '</div>\n' +
+                                '                                                <div class="price-search">\n' +
+                                '                                                    From <span style="font-weight: bold; color: #80B500" >' + formatPrice(item.price) + '</span>\n' +
+                                '                                                </div>\n' +
+                                '                                            </div>\n' +
+                                '                                        </a>\n' +
+                                '                                    </li>';
+                        });
+
+                        $('#product-list-search').empty();
+                        $('#product-list-search').append(list);
+                    }
+
+                    if(data.length === 0){
+                        let noList = '';
+                        noList = noList + '<li class="test" style="text-align: center;">\n' +
+                            '                                        <h5>No results found</h5>\n' +
+                            '                                    </li>';
+
+                        $('#product-list-search').empty();
+                        $('#product-list-search').append(noList);
+                    }
+                    if(searchText === ""){
+                        $('#product-list-search').empty();
+                        $('#search-frame').empty();
+                    }
+                },
+                error: function (){
+                    alert("error");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
+

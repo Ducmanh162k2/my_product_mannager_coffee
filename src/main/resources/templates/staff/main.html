@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Order Page</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <link rel="stylesheet" th:href="@{/staff_assets/layuiadmin/layui/css/layui.css}"
+          href="../../static/layuiadmin/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" th:href="@{/staff_assets/layuiadmin/style/admin.css}" href="../../static/staff_assets/layuiadmin/style/admin.css"
+          media="all"/>
+    <style>
+        body {
+            font-family: "";
+        }
+
+        .goods-item-image {
+            height: 96px;
+            width: 96px;
+            margin: 2px
+        }
+
+        .goods-items ul {
+            overflow: hidden;
+            width: 100%;
+            height: 100px;
+            margin: 10px 0px;
+        }
+
+        .goods-items ul li {
+            float: left;
+        }
+
+        .input-float {
+            float: left;
+        }
+
+        .layui-side-scroll ul li cite {
+            font-size: 18px;
+        }
+
+        .layui-side-scroll ul li i {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header" style="background-color: #6D4C41 ; box-shadow: none;">
+            <!--  -->
+            <ul class="layui-nav layui-layout-left">
+                <!--  <li class="layui-nav-item layui-hide-xs">
+                      <input type="text" placeholder="..." autocomplete="off" class="layui-input layui-input-search"
+                             layadmin-event="serach">
+                  </li>-->
+            </ul>
+            <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="note">
+                        <i class="layui-icon layui-icon-note" style="color: #FFFFFF"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="fullscreen">
+                        <i class="layui-icon layui-icon-screen-full" style="color: #FFFFFF"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;"  style="color:#FFFFFF;"  data-type="test2" id="commit_goods">Đã đặt món</a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" style="color:#FFFFFF;" data-type="test2" id="goods">Món đã chọn</a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a id="logout" style="color:#FFFFFF;font-size: 14px" href="javascript:;" onclick="logout()"/>HỦY</a>
+                </li>
+            </ul>
+        </div>
+
+        <!--  -->
+        <div class="layui-side layui-side-menu" style="background-color: #6D4C41 ; box-shadow:none; ">
+            <div class="layui-side-scroll">
+                <div class="layui-logo"
+                     style="text-align: left;background-color:rgba(255,255,255,0);font-size: 20px;padding-left: 20px;border:0px;box-shadow:none;">
+                    <b>BÀN </b><b id="deskCode" th:text="${session.deskCode}"></b>
+                </div>
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
+                    lay-filter="layadmin-system-side-menu">
+                    <li data-name="console" class=" layui-nav-item layui-nav-itemed">
+                        <a lay-href="home/console.html" lay-tips="" lay-direction="2">
+                            <i class="layui-icon layui-icon-home"></i>
+                            <cite>Menu</cite>
+                        </a>
+                        </dl>
+                    </li>
+<!--                    <li data-name="component" class="layui-nav-item">-->
+<!--                        <a th:attr="lay-href=@{/staff/table/goodslist.html/1}" lay-tips="" lay-direction="2">-->
+<!--                            <i class="layui-icon layui-icon-home"></i>-->
+<!--                            <cite>Coffee</cite>-->
+<!--                        </a>-->
+<!--                    </li>-->
+                    <th:block th:each="category:${categoryList}">
+                        <li data-name="component" class="layui-nav-item">
+                            <a th:attr="lay-href=@{/staff/table/goodslist.html/{categoryId}(categoryId=${category.id})},lay-tips=${category.name}"
+                               lay-tips="" lay-direction="2" target="iframe">
+                                <i class="layui-icon layui-icon-home"></i>
+                                <cite th:text="${category.name}"></cite>
+                            </a>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
+        </div>
+        <!--  -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <a th:href="@{/staff/table/desklist}" class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></a>
+            <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li lay-id="home/console.html" lay-attr="home/console.html" class="layui-this">
+                        <a th:href="@{/}" class="layui-icon layui-icon-home"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--/* iframe*/-->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe name="iframe" th:src="@{/staff/table/goodslist.html/2}" frameborder="0"
+                        class="layadmin-iframe">
+
+                </iframe>
+            </div>
+        </div>
+        <!--/**/-->
+        <div id="right_window-contain">
+            <!-- ， -->
+            <div class="layadmin-body-shade" layadmin-event="shade"></div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/staff_assets/layuiadmin/layui/layui.js}" src="../../static/staff_assets/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript" th:src="@{/staff_assets/js/main.js}" src="../../static/staff_assets/js/main.js"></script>
+<script type="text/javascript">
+    function logout() {
+        layer.confirm('Exit?',
+            {
+                title: "Exit",
+                btn: ['Yes', 'No']
+            },
+            function () {
+                var curDeskCode = document.getElementById("deskCode").innerText;
+                location.href = '/staff/table/logout/'+curDeskCode;
+            });
+    }
+</script>
+</body>
+</html>

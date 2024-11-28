@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new product</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">Thêm nhân viên</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a th:href="@{/admin/staff_user}">Nhân viên</a></li>
+                        <li class="breadcrumb-item active">Thêm mới nhân viên</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Thông tin nhân viên</h4></div>
+                <div class="card-body">
+                    <form th:action="@{/admin/staff_user/add}" th:object="${staff}"
+                           method="post">
+                        <div class="row">
+                            <div class="col-sm-6">
+
+                                <div class="mb-3">
+                                    <label for="username">Tên người dùng</label>
+                                    <input th:field="*{username}" id="username" name="username" type="text" class="form-control" pattern="[A-Za-z0-9]{4,}" title="Username must be at least 4 characters long and contain only letters and numbers." th:value="*{username}">
+                                    <div style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+                                    </div>
+                                    <div th:if="${messUserName}" style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:text="${messUserName}"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password">Mật khẩu</label>
+                                    <input th:field="*{password}" id="password" name="password" type="password" class="form-control">
+                                    <div style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmpassword">Xác nhận mật khẩu</label>
+                                    <input style="letter-spacing: normal" id="confirmpassword" name="confirmpassword" type="password" class="form-control" oninput="checkPasswordMatch(this);">
+                                </div>
+
+<!--                                <div class="mb-3">-->
+<!--                                    <label for="weight">Weight (kg)</label>-->
+<!--                                    <input th:field="*{weight}" id="weight" name="weight" min="0.1" type="number"-->
+<!--                                           class="form-control">-->
+<!--                                </div>-->
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="email">Email</label>
+                                    <input th:field="*{email}" id="email" name="email" type="email"
+                                           class="form-control" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                           title="Please enter a valid email address." th:value="*{email}">
+                                    <div style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                    </div>
+                                    <div th:if="${messEmail}" style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:text="${messEmail}"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="full_name">Họ và tên</label>
+                                    <input th:field="*{full_name}" id="full_name"  name="full_name" type="text"
+                                           class="form-control" th:value="*{full_name}" >
+                                    <div style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('full_name')}" th:errors="*{full_name}"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone">Số điện thoại</label>
+                                    <input th:field="*{phone}" id="phone"  name="phone" type="text"
+                                           class="form-control" pattern="0[0-9]{9}" title="Phone number must be 10 digits long and start with 0." th:value="*{phone}">
+                                    <div style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                                    </div>
+                                    <div th:if="${messPhone}" style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:text="${messPhone}"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <input type="submit" value="Lưu thay đổi" class="btn btn-primary waves-effect waves-light">
+                            <a th:href="@{/admin/staff_user}" type="button"
+                               class="btn btn-secondary waves-effect waves-light">Thoát</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+    <script th:inline="javascript">
+        function checkPasswordMatch(fieldConfirmPassword) {
+            if (fieldConfirmPassword.value != $("#password").val()) {
+                fieldConfirmPassword.setCustomValidity("Mật khẩu không khớp");
+            } else {
+                fieldConfirmPassword.setCustomValidity("");
+            }
+        }
+        document.querySelector("form").addEventListener("submit", function(event) {
+            var phoneField = document.querySelector("[name='phone']");
+            var usernameField = document.querySelector("[name='username']");
+
+            var emailField = document.querySelector("[name='email']");
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailPattern.test(emailField.value)) {
+                alert("Vui lòng nhập địa chỉ email hợp lệ.");
+                event.preventDefault();
+            }
+
+            if (!phoneField.checkValidity()) {
+                alert("Số điện thoại phải dàu 10 chữ số.");
+                event.preventDefault();
+            }
+
+            if (!usernameField.checkValidity()) {
+                alert("Tên đăng nhập phải dài ít nhất 4 ký tự và chỉ chứa chữ cái hoặc số.");
+                event.preventDefault();
+            }
+        });
+    </script>
+</div>
+
+</body>
+</html>

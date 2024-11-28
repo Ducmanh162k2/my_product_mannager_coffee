@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/client_layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.name}"></title>
+    <link rel="stylesheet" th:href="@{/client_assets/css/rating.css}">
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image"
+         th:attr="data-bg=@{/client_assets/img/bg/9.jpg}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h6 class="section-subtitle ltn__secondary-color">Chào mừng đến với cửa hàng</h6>
+                            <h1 class="section-title white-color" th:text="${product.name}"></h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li th:text="${product.name}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+
+    <!-- SHOP DETAILS AREA START -->
+    <div class="ltn__shop-details-area pb-85">
+        <div class="container">
+            <div class="row">
+                <div th:object="${product}" class="col-lg-8 col-md-12">
+                    <div class="ltn__shop-details-inner mb-60">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="ltn__shop-details-img-gallery">
+                                    <div class="ltn__shop-details-large-img">
+                                        <div class="single-large-img">
+                                            <a th:href="@{${product.imagesPath}}" data-rel="lightcase:myCollection">
+                                                <img th:src="@{${product.imagesPath}}" alt="Image">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ltn__shop-details-small-img slick-arrow-2">
+                                        <div class="single-small-img">
+                                            <img th:src="@{${product.imagesPath}}" alt="Image">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modal-product-info shop-details-info pl-0">
+                                    <div th:if="${average_rating == 0}" class="product-ratting">
+                                        <ul>
+                                            <li>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                            </li>
+                                            <li class="review-total"><a href="#"> ( <span th:text="${total_comments}"></span> Đánh giá)</a></li>
+                                        </ul>
+                                    </div>
+                                    <div th:if="${average_rating != 0}" class="product-ratting">
+                                        <ul>
+                                            <li th:each="i : ${#numbers.sequence(1, average_rating)}">
+                                                <a href="#"><i class="fas fa-star"></i></a>
+                                            </li>
+                                            <li th:if="${5 - product.averageRating > 0}" th:each="i : ${#numbers.sequence(1, 5 - product.averageRating)}">
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                            </li>
+                                            <li class="review-total"><a href="#"> ( <span th:text="${total_comments}"></span> Đánh giá)</a></li>
+                                        </ul>
+                                    </div>
+                                    <h3 th:text="${product.name}"></h3>
+                                    <div class="product-price">
+                                        <span><span
+                                                th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ</span>
+                                        <!--                                        <del>$65.00</del>-->
+                                    </div>
+                                    <div class="modal-product-meta ltn__product-details-menu-1">
+                                        <ul>
+                                            <li>
+                                                <strong style="min-width: unset">Danh mục:</strong>
+                                                <span th:each="temp:${categories}">
+                                                    <a style="margin-right: 0"
+                                                       th:href="@{/product/category/{id}(id=${temp.id})}"
+                                                       th:text="${temp.name}"></a>
+                                                    <span th:if="${!tempStat.last}">,</span>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <form>
+                                        <input type="hidden" name="id" th:value="${product.id}">
+                                        <div class="ltn__product-details-menu-2">
+                                            <ul>
+                                                <li>
+                                                    <div class="cart-plus-minus">
+                                                        <input type="text" value="01" name="quantity"
+                                                               class="cart-plus-minus-box" id="quantity">
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <a class="theme-btn-1 btn btn-effect-1" title="Add to Cart"
+                                                       href="#" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal"
+                                                       th:attr="data-product-img=${product.imagesPath}, data-product-name=${product.name}"
+                                                       th:onclick="'addToCart(this, \'' + ${product.id} + '\')'">
+                                                        <i class="fas fa-shopping-cart"></i>
+                                                        <span>ADD TO CART</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                    <div class="ltn__product-details-menu-3">
+                                        <ul>
+                                            <li>
+                                                <a href="#" class="" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal"
+                                                   th:attr="data-product-img2=${product.imagesPath}, data-product-name2=${product.name}"
+                                                   th:onclick="'addToWishList(this, \'' + ${product.id} + '\')'">
+                                                    <i class="far fa-heart"></i>
+                                                    <span>Add to Wishlist</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <hr>
+                                    <div class="ltn__social-media">
+                                        <ul>
+                                            <li>Share:</li>
+                                            <li><a href="https://www.facebook.com/profile.php?id=100046162681296"
+                                                   title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                                            <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                                            <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+                                            <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+
+                                        </ul>
+                                    </div>
+                                    <hr>
+                                    <div class="ltn__safe-checkout">
+                                        <h5>Thanh toán an toàn được đảm bảo</h5>
+                                        <img th:src="@{/client_assets/img/icons/payment-2.png}" alt="Payment Image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shop Tab Start -->
+                    <div class="ltn__shop-details-tab-inner ltn__shop-details-tab-inner-2">
+                        <div class="ltn__shop-details-tab-menu">
+                            <div class="nav">
+                                <a class="active show" data-bs-toggle="tab"
+                                   href="#liton_tab_details_1_1">Description</a>
+                                <a data-bs-toggle="tab" href="#liton_tab_details_1_2" class="">Reviews</a>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="liton_tab_details_1_1">
+                                <div class="ltn__shop-details-tab-content-inner">
+                                    <p class="title-2" th:utext="${product.description}"></p>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="liton_tab_details_1_2">
+                                <div class="ltn__shop-details-tab-content-inner">
+                                    <h4 class="title-2">Customer Reviews</h4>
+                                    <div th:if="${average_rating == 0}" class="product-ratting">
+                                        <ul>
+                                            <li>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                            </li>
+                                            <li class="review-total"><a href="#"> ( <span th:text="${total_comments}"></span> Reviews)</a></li>
+                                        </ul>
+                                    </div>
+                                    <div th:if="${average_rating != 0}" class="product-ratting">
+                                        <ul>
+                                            <li th:each="i : ${#numbers.sequence(1, average_rating)}">
+                                                <a href="#"><i class="fas fa-star"></i></a>
+                                            </li>
+                                            <li th:if="${5 - product.averageRating > 0}" th:each="i : ${#numbers.sequence(1, 5 - product.averageRating)}">
+                                                <a href="#"><i class="far fa-star"></i></a>
+                                            </li>
+                                            <li class="review-total"><a href="#"> ( <span th:text="${total_comments}"></span> Reviews)</a></li>
+                                        </ul>
+                                    </div>
+                                    <hr>
+                                    <!-- comment-area -->
+                                    <div class="ltn__comment-area mb-30">
+                                        <div th:each="comment : ${product.comments}" class="ltn__comment-inner">
+                                            <ul id="comment-section">
+                                                <li>
+                                                    <div class="ltn__comment-item clearfix">
+                                                        <div class="ltn__commenter-img">
+                                                            <img th:src="@{${comment.user.img}}" alt="Image">
+                                                        </div>
+                                                        <div class="ltn__commenter-comment">
+                                                            <h6><a href="#" th:text="${comment.user.full_name}"></a></h6>
+                                                            <div class="product-ratting">
+                                                                <ul>
+                                                                    <li th:each="i : ${#numbers.sequence(1, comment.rating_value)}">
+                                                                        <a href="#"><i class="fas fa-star"></i></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <p th:text="${comment.comment_text}"></p>
+                                                            <span class="ltn__comment-reply-btn" th:text="${#dates.format(comment.timestamp, 'MMMM d, yyyy')}"></span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- comment-reply -->
+                                    <div class="ltn__comment-reply-area ltn__form-box mb-30">
+                                        <form th:action="@{/product/comment}" method="post">
+                                            <h4 class="title-2">Add a Review</h4>
+                                            <div class="mb-30">
+                                                <div class="add-a-review">
+                                                    <h6 style="margin-bottom: -10px">Your Ratings:</h6>
+                                                    <div class="product-ratting">
+                                                        <div class="rate">
+                                                            <input type="radio" id="star5" name="rate" value="5" />
+                                                            <label for="star5" title="text">5 stars</label>
+                                                            <input type="radio" id="star4" name="rate" value="4" />
+                                                            <label for="star4" title="text">4 stars</label>
+                                                            <input type="radio" id="star3" name="rate" value="3" />
+                                                            <label for="star3" title="text">3 stars</label>
+                                                            <input type="radio" id="star2" name="rate" value="2" />
+                                                            <label for="star2" title="text">2 stars</label>
+                                                            <input type="radio" id="star1" name="rate" value="1" />
+                                                            <label for="star1" title="text">1 star</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input th:value="${product.id}" type="hidden" name="productID">
+                                            <div class="input-item input-item-textarea ltn__custom-icon">
+                                                <textarea id="text"  required name="comment-text" placeholder="Type your comments...."></textarea>
+                                            </div>
+                                            <div class="btn-wrapper">
+                                                <button class="btn theme-btn-1 btn-effect-1 text-uppercase"
+                                                        type="submit">Submit
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shop Tab End -->
+                </div>
+                <div class="col-lg-4">
+                    <aside class="sidebar ltn__shop-sidebar ltn__right-sidebar">
+                        <!-- Top Rated Product Widget -->
+                        <div class="widget ltn__top-rated-product-widget">
+                            <h4 class="ltn__widget-title ltn__widget-title-border">Top Rated Product</h4>
+                            <ul>
+                                <li th:each="temp: ${top_rated_product}">
+                                    <div class="top-rated-product-item clearfix">
+                                        <div class="top-rated-product-img">
+                                            <a th:href="@{/product/detail/{id}(id=${temp.id})}"><img th:src="@{${temp.imagesPath}}" alt="#"></a>
+                                        </div>
+                                        <div class="top-rated-product-info">
+                                            <div th:if="${temp.averageRating == 0}" class="product-ratting">
+                                                <ul>
+                                                    <li>
+                                                        <a href="#"><i class="far fa-star"></i></a>
+                                                        <a href="#"><i class="far fa-star"></i></a>
+                                                        <a href="#"><i class="far fa-star"></i></a>
+                                                        <a href="#"><i class="far fa-star"></i></a>
+                                                        <a href="#"><i class="far fa-star"></i></a>
+                                                    </li>
+                                                    <li class="review-total"> <a href="#"> (0)</a></li>
+                                                </ul>
+                                            </div>
+                                            <div th:if="${temp.averageRating != 0}" class="product-ratting">
+                                                <ul>
+                                                    <li th:each="i : ${#numbers.sequence(1, temp.averageRating)}">
+                                                        <a href="#"><i class="fas fa-star"></i></a>
+                                                    </li>
+                                                    <li th:if="${5 - temp.averageRating > 0}" th:each="i : ${#numbers.sequence(1, 5 - temp.averageRating)}">
+                                                        <a href="#"><i class="far fa-star"></i></a>
+                                                    </li>
+                                                    <li class="review-total"> <a href="#"> (<span th:text="${temp.totalComments}"></span>)</a></li>
+                                                </ul>
+                                            </div>
+                                            <h6><a th:href="@{/product/detail/{id}(id=${temp.id})}" th:text="${temp.name}"></a></h6>
+                                            <div class="product-price">
+                                                <span>
+                                                    <span th:text="${#numbers.formatDecimal(temp.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ
+                                                </span>
+<!--                                                <del>$65.00</del>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Banner Widget -->
+                        <div class="widget ltn__banner-widget">
+                            <a href="/product"><img th:src="@{/client_assets/img/banner/2.jpg}" alt="#"></a>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SHOP DETAILS AREA END -->
+
+    <!-- PRODUCT SLIDER AREA START -->
+    <div class="ltn__product-slider-area ltn__product-gutter pb-70">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title-area ltn__section-title-2">
+                        <h6 class="section-subtitle ltn__secondary-color">// cars</h6>
+                        <h1 class="section-title">Related Products<span>.</span></h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row ltn__related-product-slider-one-active slick-arrow-1">
+                <!-- ltn__product-item -->
+                <div th:each="temp : ${product_related}" class="col-lg-12">
+                    <div class="ltn__product-item ltn__product-item-3 text-center">
+                        <div class="product-img">
+                            <a th:href="@{/product/detail/{id}(id=${temp.id})}"><img th:src="@{${temp.imagesPath}}"
+                                                                                     alt="#"></a>
+                            <div class="product-badge">
+                                <ul>
+                                    <li class="sale-badge">New</li>
+                                </ul>
+                            </div>
+                            <div class="product-hover-action">
+                                <ul>
+                                    <li>
+                                        <a href="#" title="Quick View" data-bs-toggle="modal"
+                                           data-bs-target="#quick_view_modal"
+                                           th:onclick="'quickView(\'' + ${temp.id} + '\')'">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal"
+                                           th:attr="data-product-img=${temp.imagesPath}, data-product-name=${temp.name}"
+                                           th:onclick="'addToCart(this, \'' + ${temp.id} + '\')'" title="Add to Cart">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal"
+                                           th:attr="data-product-img2=${temp.imagesPath}, data-product-name2=${temp.name}"
+                                           th:onclick="'addToWishList(this, \'' + ${temp.id} + '\')'">
+                                            <i class="far fa-heart"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div th:if="${temp.averageRating == 0}" class="product-ratting">
+                                <ul>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                    <li class="review-total"> <a href="#">(0)</a></li>
+                                </ul>
+                            </div>
+                            <div th:if="${temp.averageRating != 0}" class="product-ratting">
+                                <ul>
+                                    <li th:each="i : ${#numbers.sequence(1, temp.averageRating)}">
+                                        <a href="#"><i class="fas fa-star"></i></a>
+                                    </li>
+                                    <li th:if="${5 - temp.averageRating > 0}" th:each="i : ${#numbers.sequence(1, 5 - temp.averageRating)}">
+                                        <a href="#"><i class="far fa-star"></i></a>
+                                    </li>
+                                    <li class="review-total"> <a href="#"> (<span th:text="${temp.totalComments}"></span>)</a></li>
+                                </ul>
+                            </div>
+                            <h2 class="product-title"><a th:href="@{/product/detail/{id}(id=${temp.id})}"
+                                                         th:text="${temp.name}"></a></h2>
+                            <div class="product-price">
+                                <span><span
+                                        th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ</span>
+                                <!--                                <del>$162.00</del>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PRODUCT SLIDER AREA END -->
+    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+    <script th:src="@{/client_assets/js/cart.js}"></script>
+    <script th:src="@{/client_assets/js/wishlist.js}"></script>
+    <script th:inline="javascript">
+        // function comment(){
+        //     var productID = $("#productID").val();
+        //     var text = $("#text").val();
+        //     var rating = $("input[name='rate']:checked").val();
+        //     $.ajax({
+        //         url: '/comment',
+        //         type: 'GET',
+        //         data: {productID: productID, text: text, rating: rating},
+        //         success: function (data) {
+        //             let comment = '';
+        //             comment += '<li>\n' +
+        //                 '    <div class="ltn__comment-item clearfix">\n' +
+        //                 '        <div class="ltn__commenter-img">\n' +
+        //                 '            <img src="' + data.user_img+ '" alt="Image">\n' +
+        //                 '        </div>\n' +
+        //                 '        <div class="ltn__commenter-comment">\n' +
+        //                 '            <h6><a href="#">' + data.user_name + ' </a></h6>\n' +
+        //                 '            <div class="product-ratting">\n' +
+        //                 '                <ul>\n';
+        //
+        //             for (var i = 1; i <= data.rating; i++) {
+        //                 comment += '                    <li>\n' +
+        //                     '                        <a href="#"><i class="fas fa-star"></i></a>\n' +
+        //                     '                    </li>\n';
+        //             }
+        //             comment += '                </ul>\n' +
+        //                 '            </div>\n' +
+        //                 '            <p>' + data.comment_text + '</p>\n' +
+        //                 '            <span class="ltn__comment-reply-btn">' + data.date + '</span>\n' +
+        //                 '        </div>\n' +
+        //                 '    </div>\n' +
+        //                 '</li>';
+        //
+        //             $("#comment-section").append(comment);
+        //         },
+        //         error: function (error) {
+        //             console.log('Error:', error);
+        //         }
+        //     });
+        // }
+    </script>
+</div>
+</body>
+</html>

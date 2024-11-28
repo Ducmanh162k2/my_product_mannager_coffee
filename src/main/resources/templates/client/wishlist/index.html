@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/client_layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WishList</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-white-90 bg-image"
+         th:attr="data-bg=@{/client_assets/img/bg/21.jpg}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h6 class="section-subtitle ltn__secondary-color">Chào mừng đến với cửa hàng</h6>
+                            <h1 class="section-title white-color">Danh sách yêu thích</h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li>Danh sách yêu thích</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+
+    <!-- SHOPING CART AREA START -->
+    <div class="liton__shoping-cart-area mb-120" th:if="${not #lists.isEmpty(wishlist.cartItems)}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping-cart-inner">
+                        <div class="table-responsive">
+                            <table class="table align-middle table-nowrap table-check">
+                                <thead class="table-light">
+                                <th class="align-middle">Xóa</th>
+                                <th class="align-middle cart-product-image">Hình ảnh</th>
+                                <th class="align-middle">Sản phẩm</th>
+                                <th class="align-middle">Giá</th>
+                                <th class="align-middle">Trạng thái</th>
+                                <th class="align-middle">Hành động</th>
+                                </thead>
+                                <tbody>
+                                <tr th:each="item : ${wishlist.cartItems}">
+                                    <td class="cart-product-remove"><a
+                                            th:href="@{/wishlist/removeFromWishList/{id}(id=${item.getProductId()})}">X</a></td>
+                                    <td class="cart-product-image">
+                                        <a th:href="@{/product/detail/{id}(id=${item.productId})}"><img
+                                                th:src="@{${item.img}}" alt="#"></a>
+                                    </td>
+                                    <td class="cart-product-info">
+                                        <h4 style="font-size: 16px"><a th:href="@{/product/detail/{id}(id=${item.productId})}"
+                                                                       th:text="${item.productName}"></a></h4>
+                                    </td>
+                                    <td class="cart-product-price"><span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ</td>
+                                    <td class="cart-product-stock">In Stock</td>
+                                    <td class="cart-product-add-cart">
+                                        <a class="submit-button-1" href="#" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal"
+                                           th:attr="data-product-img=${item.img}, data-product-name=${item.productName}"
+                                           th:onclick="'addToCart(this, \'' + ${item.productId} + '\')'" title="Add to Cart">Thêm vào giỏ hàng
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SHOPING CART AREA END -->
+
+    <!-- SHOPING CART AREA START -->
+    <div class="liton__shoping-cart-area mb-120" th:if="${#lists.isEmpty(wishlist.cartItems)}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping-cart-inner">
+                        <h3 class="mt-5">Danh sách yêu thích của bạn hiện đang trống.</h3>
+                        <p class="lead">Vui lòng thêm một số sản phẩm vào danh sách yêu thích của bạn.</p>
+                        <a class="theme-btn-1 btn btn-effect-1" href="/product">Đi đến danh sách sản phẩm.</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SHOPING CART AREA END -->
+
+    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+    <script th:src="@{/client_assets/js/cart.js}"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh sửa blog</title>
+    <!--web fonts-->
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+<!--    &lt;!&ndash;summernote&ndash;&gt;-->
+<!--    <link th:href="@{/assets/summernote/bootstrap.min.css}" rel="stylesheet">-->
+<!--    &lt;!&ndash;summernote&ndash;&gt;-->
+<!--    <link th:href="@{/assets/summernote/summernote-bs4.css}" rel="stylesheet">-->
+<!--    src-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="style/styleCss.css"/>-->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
+
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">Thêm Blog</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a th:href="@{/admin/product}">Blogs</a></li>
+                        <li class="breadcrumb-item active">Thêm Blog</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Thông tin Blog</h4></div>
+                <div class="card-body">
+                    <form id="blog-form" th:action="@{/admin/blog/edit}" th:object="${blog}"
+                          enctype="multipart/form-data" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="productname">Tên blog:</label>
+                                    <input th:field="*{name}" id="productname" name="productname" type="text"
+                                           class="form-control">
+                                    <div style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="image">Hình nền:</label>
+                                    <input id="image" name="image" type="file" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card card-shadow mb-4">
+                                    <div class="card-header border-0">
+                                        <div class="custom-title-wrap bar-primary">
+                                            <div style="color: #30373f; font-weight: 500" class="custom-title">Mô tả: </div>
+                                        </div>
+                                    </div>
+<!--                                    <div class="card-body">-->
+<!--                                        <div id="summernote" th:utext="${blog.description}"></div>-->
+<!--                                    </div>-->
+                                    <div class="card-body">
+                                        <textarea id="summernote" th:utext="${blog.description}" type="text" class="form-control" name="description" placeholder="Description here..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <input type="submit" value="Lưu thay đổi" class="btn btn-primary waves-effect waves-light">
+                            <a th:href="@{/admin/blog}" type="button"
+                               class="btn btn-secondary waves-effect waves-light">Hủy</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+<!--    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>-->
+<!--    <script th:src="@{/assets/summernote/popper.min.js}"></script>-->
+<!--    <script th:src="@{/assets/summernote/bootstrap.min.js}"></script>-->
+<!--    <script th:inline="javascript">-->
+<!--        $(document).ready(function () {-->
+<!--            document.getElementById('blog-form').addEventListener('submit', function (e) {-->
+<!--                e.preventDefault();-->
+<!--                var description = $('#summernote').summernote('code')-->
+<!--                $('<input />').attr('type', 'hidden')-->
+<!--                    .attr('name', 'description')-->
+<!--                    .attr('value', description)-->
+<!--                    .appendTo('#blog-form');-->
+<!--                this.submit();-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Description here...',
+            tabsize: 2,
+            height: 300
+        });
+    </script>
+</div>
+
+</body>
+</html>

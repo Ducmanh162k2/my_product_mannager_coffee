@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product manager</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">Sản phẩm</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a th:href="@{/admin}">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Sản phẩm không hoạt động</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+    <span class="d-none" id="messageSuccess" th:text="${message}"></span>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-sm-4">
+                            <!--                            <div class="search-box me-2 mb-2 d-inline-block">-->
+                            <!--                                <div class="position-relative">-->
+                            <!--                                    <input type="text" class="form-control" placeholder="Search...">-->
+                            <!--                                    <i class="bx bx-search-alt search-icon"></i>-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
+                        </div>
+<!--                        <div class="col-sm-8">-->
+<!--                            <div class="text-sm-end">-->
+<!--                                <a th:href="@{/admin/product/add}" type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2"><i class="mdi mdi-plus me-1"></i> Add New Product</a>-->
+<!--                            </div>-->
+
+<!--                            <div class="text-sm-end">-->
+<!--                                <a th:href="@{/admin/product/download}" type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2"><i class="mdi mdi-plus me-1"></i> Download Import Template</a>-->
+<!--                            </div>-->
+
+<!--                            <div class="text-sm-end">-->
+<!--                                <form method="POST" enctype="multipart/form-data" th:action="@{/admin/product/upload}">-->
+<!--                                    <input type="file" name="file" />-->
+<!--                                    <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2">Import Excel File</button>-->
+<!--                                </form>-->
+<!--                            </div>-->
+
+
+<!--                        </div>&lt;!&ndash; end col&ndash;&gt;-->
+
+                    </div>
+                    <!---------datatable-------------------------------------------------------->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br /><br />
+                            <table class="table table-hover table-responsive" id="products">
+                                <thead>
+                                <tr>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span> ID</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span> Tên sản phẩm</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span> Mô tả</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span> Số lượng</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span> Giá</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span> Thể loại</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span> Hành động</th>
+                                    <!--                    <th>-->
+                                    <!--                      <a asp-controller="Admin" asp-action="AddTrip" class="btn btn-link">-->
+                                    <!--                        <span class="fa fa-plus fa-fw  text-info"></span> Add New Trip-->
+                                    <!--                      </a>-->
+                                    <!--                    </th>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="product: ${products}">
+                                    <td><a class="text-body fw-bold"><span th:text="${product.id}"></span></a> </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img class="img-fluid rounded" th:src="@{${product.imagesPath}}" style="max-width: 60px" alt="">
+                                            <h6 class="m-b-0 m-l-10" th:text="${product.name}"></h6>
+                                        </div>
+                                    </td>
+                                    <td>...</td>
+                                    <td><span th:text="${product.quantity}"></span></td>
+                                    <td><span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ</td>
+                                    <td th:text="${product.category.name}"></td>
+                                    <td>
+                                        <div class="d-flex gap-3">
+<!--                                            <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" title="Edit" class="text-success"><i class="mdi mdi-pencil font-size-18"></i></a>-->
+
+                                            <a th:href="@{/admin/product/deactive/{id}(id=${product.id})}" class="text-success"
+                                               onclick="return confirm('Bạn có chắc chắn muốn khôi phuc sản phẩm này?');">
+                                                <i class="mdi mdi-cog-clockwise font-size-18"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var message = $('#messageSuccess').text();
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+            }
+            if (message !== '') {
+                toastr.success(message);
+            }
+        });
+
+        function deleteProduct(event, productId) {
+            event.preventDefault();  // Ngăn chặn hành động mặc định của thẻ <a>
+
+            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
+                fetch(`@{/admin/product/${productId}}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            toastr.success("Sản phẩm đã được xóa thành xông");
+                            document.getElementById(`product-${productId}`).remove();
+                        } else {
+                            toastr.error("Xóa sản phẩn không thành công");
+                        }
+                    })
+                    .catch(error => console.error('Lỗi:', error));
+            }
+        }
+    </script>
+
+</div>
+
+</body>
+</html>

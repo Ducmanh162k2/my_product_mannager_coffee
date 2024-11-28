@@ -1,0 +1,410 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>My Order</title>-->
+<!--    <link rel="stylesheet" th:href="@{/staff_assets/layuiadmin/layui/css/layui.css}"-->
+<!--          href="../../static/staff_assets/layuiadmin/layui/css/layui.css"-->
+<!--          media="all"/>-->
+<!--    <link rel="stylesheet" th:href="@{/staff_assets/layuiadmin/style/admin.css}" href="../../static/staff_assets/layuiadmin/layui/css/layui.css"-->
+<!--          media="all"/>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            margin: 10px;-->
+<!--            background: #eeeeee;-->
+<!--        }-->
+<!--    </style>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>-->
+<!--    <script src="/path/to/jspdf.umd.min.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="layui-card">-->
+<!--    <div class="layui-card-body">-->
+<!--        &lt;!&ndash; table&ndash;&gt;-->
+<!--        <table id="tableList" lay-filter="tableList">-->
+
+<!--        </table>-->
+<!--        &lt;!&ndash;&ndash;&gt;-->
+<!--        <script th:inline="javascript" type="text/html" id="barDemo">-->
+<!--            {{#-->
+<!--            if(d.status>0||d.orders.status==1){-->
+<!--            }}-->
+<!--            <a class="layui-btn layui-btn-disabled layui-btn-xs">Cancel</a>-->
+<!--            {{#-->
+<!--            }else{-->
+<!--            }}-->
+<!--            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">Cancel</a>-->
+<!--            {{#-->
+<!--            }-->
+<!--            }}-->
+<!--        </script>-->
+<!--        <script type="text/html" id="imgUrl">-->
+<!--            {{#-->
+<!--            if( d.product.img==null||d.product.img=='')-->
+<!--            { }}-->
+<!--            <div style="color:red">No photo</div>-->
+<!--            {{#  } else { }}-->
+<!--            <img src="{{d.product.img}}" class="laytable-cell-1-imgUrl">-->
+<!--            {{#  } }}-->
+<!--        </script>-->
+<!--        <script type="text/html" id="status">-->
+<!--            {{#-->
+<!--            if( d.status==0){-->
+<!--            }}-->
+<!--            <div style="color: #01AAED">Waiting to Cook</div>-->
+<!--            {{#-->
+<!--            } else if(d.status==1){-->
+<!--            }}-->
+<!--            <div style="color: #FFB800">Cooking</div>-->
+<!--            {{#-->
+<!--            } else if(d.status==2){-->
+<!--            }}-->
+<!--            <div style="color: #FF5722">Waiting to Serve</div>-->
+<!--            {{#-->
+<!--            } else if(d.status==3){-->
+<!--            }}-->
+<!--            <div style="color:#5FB878">Served</div>-->
+<!--            {{#-->
+<!--            }-->
+<!--            }}-->
+<!--        </script>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<script th:src="@{/staff_assets/layuiadmin/layui/layui.js}" src="../../static/staff_assets/layuiadmin/layui/layui.js"></script>-->
+<!--<script th:inline="javascript">-->
+<!--    layui.use(['table', 'laydate'], function () {-->
+<!--        var $ = layui.$-->
+<!--            , form = layui.form-->
+<!--            , table = layui.table-->
+<!--            ,orderCode = [[${orderCode}]];-->
+<!--        table.render({-->
+<!--            elem: '#tableList'-->
+<!--            , url: '/staff/order/myOrder.do?orderCode='+orderCode//-->
+<!--            , title: 'Submitted Order'-->
+<!--            , even: true//-->
+<!--            , request: {-->
+<!--                pageName: 'pageNum' //，：page-->
+<!--                , limitName: 'pageSize' //，：limit-->
+<!--            }-->
+<!--            , response: {-->
+<!--                statusCode: 200-->
+<!--            },-->
+<!--            height:400-->
+<!--            , limits: [6, 10, 20, 30]-->
+<!--            ,limit:6-->
+<!--            , page: true-->
+<!--            ,size:'lg'-->
+<!--            , cols: [[ //-->
+<!--                {field: 'odId', title:'ID', align: 'center', cellMinWidth: 60, fixed: 'left', sort: true,templet:'<div>{{d.id}}</div>',hide:true}-->
+<!--                , {field: 'goodsName', title: 'Food Name',align:'center', cellMinWidth: 150, sort: true,templet:'<div>{{d.product.name}}</div>'}-->
+<!--                , {field: 'imgUrl', title: 'Picture',align:'center', cellMinWidth:120, templet:'#imgUrl'}-->
+<!--                , {field: 'goodsCategory', title: 'Type', align:'center',cellMinWidth: 100, templet: '<div>{{d.product.category.name}}</div>'}-->
+<!--                , {field: 'price', title: 'Price',align:'center', cellMinWidth: 100,sort: true,templet:'<div>${{d.product.price}}</div>'}-->
+<!--                , {field: 'count', title: 'Count',align:'center', cellMinWidth: 100,sort:true,templet:'<div>{{d.quantity}}</div>'}-->
+<!--                , {field: 'status', title: 'Status',align:'center', cellMinWidth: 100,sort: true,templet:"#status"}-->
+<!--                , {fixed: 'right', title: "Tool Bar",align:'center', width: 120, toolbar: '#barDemo'}-->
+<!--            ]]-->
+<!--        });-->
+<!--        //-->
+<!--        table.on('tool(tableList)', function (obj) { //：tool ，test  table  lay-filter=""-->
+<!--            var data = obj.data //-->
+<!--                , layEvent = obj.event; // lay-event-->
+<!--            if (layEvent === 'del') {-->
+<!--                layer.confirm('Dismiss this order?', function (index) {-->
+<!--                    $.ajax({-->
+<!--                        url: "/staff/order/delProduct",-->
+<!--                        type: "post",-->
+<!--                        dataType: "JSON",-->
+<!--                        data: {ids: data.id},-->
+<!--                        success: function (result) {-->
+<!--                            if (result.code == 200) {-->
+<!--                                obj.del(); //（tr）DOM-->
+<!--                                layer.msg('Dismiss successfully!', {icon: 1});-->
+<!--                            } else {-->
+<!--                                layer.alert(result.msg, {-->
+<!--                                    title: 'Submission Result'-->
+<!--                                    , anim: 6-->
+<!--                                });-->
+<!--                            }-->
+<!--                        }-->
+<!--                    });-->
+<!--                    layer.close(index);-->
+<!--                });-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đơn hàng của tôi</title>
+    <link rel="stylesheet" th:href="@{/staff_assets/layuiadmin/layui/css/layui.css}"
+          href="../../static/staff_assets/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <link rel="stylesheet" th:href="@{/staff_assets/layuiadmin/style/admin.css}" href="../../static/staff_assets/layuiadmin/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body {
+            margin: 10px;
+            background: #eeeeee;
+        }
+    </style>
+    <!-- Sử dụng CDN để tải jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <!-- Thêm nút xuất PDF -->
+        <button id="exportPDF" class="layui-btn">Xuất PDF</button>
+        <!-- table-->
+        <table id="tableList" lay-filter="tableList">
+
+        </table>
+        <!---->
+        <script th:inline="javascript" type="text/html" id="barDemo">
+            {{#
+            if(d.status>0||d.orders.status==1){
+            }}
+            <a class="layui-btn layui-btn-disabled layui-btn-xs">Hủy</a>
+            {{#
+            }else{
+            }}
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">Hủy</a>
+            {{#
+            }
+            }}
+        </script>
+        <script type="text/html" id="imgUrl">
+            {{#
+            if( d.product.img==null||d.product.img=='')
+            { }}
+            <div style="color:red">không có ảnh</div>
+            {{#  } else { }}
+            <img src="{{d.product.img}}" class="laytable-cell-1-imgUrl">
+            {{#  } }}
+        </script>
+        <script type="text/html" id="status">
+            {{#
+            if( d.status==0){
+            }}
+            <div style="color: #01AAED">Chờ nấu ăn</div>
+            {{#
+            } else if(d.status==1){
+            }}
+            <div style="color: #FFB800">Đang nấu</div>
+            {{#
+            } else if(d.status==2){
+            }}
+            <div style="color: #FF5722">Chờ phục vụ</div>
+            {{#
+            } else if(d.status==3){
+            }}
+            <div style="color:#5FB878">Đã phục vụ</div>
+            {{#
+            }
+            }}
+        </script>
+    </div>
+</div>
+<script th:src="@{/staff_assets/layuiadmin/layui/layui.js}" src="../../static/staff_assets/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['table', 'laydate'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table
+            ,orderCode = [[${orderCode}]];
+        // Khai báo totalAmount ở phạm vi toàn cục để cả hai hàm có thể truy cập
+        var totalAmount = 0;
+        var total =
+            table.render({
+                elem: '#tableList'
+                , url: '/staff/order/myOrder.do?orderCode='+orderCode//
+                , title: 'Submitted Order'
+                , even: true//
+                , request: {
+                    pageName: 'pageNum' //，：page
+                    , limitName: 'pageSize' //，：limit
+                }
+                , response: {
+                    statusCode: 200
+                },
+                height:400
+                , limits: [6, 10, 20, 30]
+                ,limit:6
+                , page: true
+                ,size:'lg'
+                , cols: [[ //
+                    {field: 'odId', title:'ID', align: 'center', cellMinWidth: 60, fixed: 'left', sort: true,templet:'<div>{{d.id}}</div>',hide:true}
+                    , {field: 'goodsName', title: 'Food Name',align:'center', cellMinWidth: 150, sort: true,templet:'<div>{{d.product.name}}</div>'}
+                    , {field: 'imgUrl', title: 'Picture',align:'center', cellMinWidth:120, templet:'#imgUrl'}
+                    , {field: 'goodsCategory', title: 'Type', align:'center',cellMinWidth: 100, templet: '<div>{{d.product.category.name}}</div>'}
+                    , {field: 'price', title: 'Price',align:'center', cellMinWidth: 100,sort: true,templet:'<div>{{d.product.price}}VND</div>'}
+                    , {field: 'count', title: 'Quantity',align:'center', cellMinWidth: 100,sort:true,templet:'<div>{{d.quantity}}</div>'}
+                    ,{field: 'total_money', title:'Total', align: 'center', cellMinWidth: 100, sort: true,templet:'<div>{{d.total_money}}VND</div>'}
+                    , {field: 'status', title: 'Status',align:'center', cellMinWidth: 100,sort: true,templet:"#status"}
+                    , {fixed: 'right', title: "Tool Bar",align:'center', width: 120, toolbar: '#barDemo'}
+
+                ]],
+                done: function (res, curr, count) {
+                    totalAmount = 0;  // Reset totalAmount mỗi khi bảng được làm mới
+                    res.data.forEach(function (item) {
+                        totalAmount += item.product.price * item.quantity;
+                    });
+                    $('#totalAmount').text('Tổng tiền cần thanh toán: ' + totalAmount.toLocaleString() + ' VND');
+                }
+            });
+        //
+        table.on('tool(tableList)', function (obj) { //：tool ，test  table  lay-filter=""
+            var data = obj.data //
+                , layEvent = obj.event; // lay-event
+            if (layEvent === 'del') {
+                layer.confirm('Dismiss this order?', function (index) {
+                    $.ajax({
+                        url: "/staff/order/delProduct",
+                        type: "post",
+                        dataType: "JSON",
+                        data: {ids: data.id},
+                        success: function (result) {
+                            if (result.code == 200) {
+                                obj.del(); //（tr）DOM
+                                layer.msg('Dismiss successfully!', {icon: 1});
+                            } else {
+                                layer.alert(result.msg, {
+                                    title: 'Submission Result'
+                                    , anim: 6
+                                });
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+        // Thêm sự kiện nhấp vào nút "Xuất PDF"
+        $('#exportPDF').on('click', function () {
+            // const { jsPDF } = window.jspdf;
+            // var doc = new jsPDF();
+            //
+            // // Thêm tiêu đề cho PDF
+            // doc.text("Danh sách món ăn trong đơn hàng", 10, 10);
+            //
+            // // Lấy dữ liệu từ bảng DOM
+            // var tableData = [];
+            // $('#tableList + .layui-table-view .layui-table-body table tbody tr').each(function () {
+            //     var rowData = {};
+            //     $(this).find('td').each(function (index, td) {
+            //         var columnName;
+            //         switch (index) {
+            //             case 1: columnName = 'goodsName'; break;
+            //             case 3: columnName = 'goodsCategory'; break;
+            //             case 4: columnName = 'price'; break;
+            //             case 5: columnName = 'count'; break;
+            //             case 6: columnName = 'status'; break;
+            //         }
+            //         rowData[columnName] = $(td).text().trim();
+            //     });
+            //     tableData.push(rowData);
+            // });
+            //
+            // // Tạo tiêu đề cột
+            // var columns = [
+            //     { header: 'Food Name', dataKey: 'goodsName' },
+            //     { header: 'Type', dataKey: 'goodsCategory' },
+            //     { header: 'Price', dataKey: 'price' },
+            //     { header: 'Count', dataKey: 'count' },
+            //     { header: 'Status', dataKey: 'status' }
+            // ];
+            //
+            // // Tạo bảng trong PDF
+            // doc.autoTable({
+            //     head: [columns.map(col => col.header)],
+            //     body: tableData.map(row => columns.map(col => row[col.dataKey])),
+            //     startY: 20
+            // });
+            //
+            // // Lưu file PDF
+            // doc.save("order_list.pdf");
+            const { jsPDF } = window.jspdf;
+            var doc = new jsPDF();
+
+            // Sử dụng font Arial hoặc Times New Roman
+           // doc.setFont("Arial", "normal");
+            const pdfSize = 71;
+
+            const pdf = new jsPDF({
+                unit: 'pt',
+                orientation: 'p',
+                format: [pdfSize, pdfSize],
+                //lineHeight: 1.2
+            });
+
+            // Thêm font Roboto vào VFS
+            doc.addFileToVFS("Roboto-Regular.ttf", "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");
+            doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+
+// Thiết lập font chữ và viết nội dung
+            doc.setFont("Roboto");
+            doc.setFontSize(12);
+
+            doc.text("Bill", 10, 10);
+
+            var tableData = [];
+            $('#tableList + .layui-table-view .layui-table-body table tbody tr').each(function () {
+                var rowData = {};
+                $(this).find('td').each(function (index, td) {
+                    var columnName;
+                    switch (index) {
+                        case 1: columnName = 'goodsName'; break;
+                        // case 2: columnName = 'imgUrl'; break;
+                        case 3: columnName = 'goodsCategory'; break;
+                        case 4: columnName = 'price'; break;
+                        case 5: columnName = 'count'; break;
+                        case 6: columnName = 'total_money'; break;
+                    }
+                    rowData[columnName] = $(td).text().trim();
+                });
+                tableData.push(rowData);
+            });
+
+            var columns = [
+                { header: 'FoodName', dataKey: 'goodsName' },
+                // { header: 'Image', dataKey: 'imgUrl' },
+                { header: 'Type', dataKey: 'goodsCategory' },
+                { header: 'Price', dataKey: 'price' },
+                { header: 'Quantity', dataKey: 'count' },
+                { header: 'Total', dataKey: 'total_money' }
+            ];
+
+            // Thêm bảng vào PDF
+            doc.autoTable({
+                head: [columns.map(col => col.header)],
+                body: tableData.map(row => columns.map(col => row[col.dataKey])),
+                startY: 20
+            });
+
+            // Hiển thị tổng tiền dưới bảng
+            var finalY = doc.autoTable.previous.finalY; // Get Y-coordinate for the next text
+            doc.text("Total: " + totalAmount.toLocaleString() + ' VND', 10, finalY + 10);
+
+            // Thêm hình ảnh vào PDF (sử dụng base64 hoặc URL)
+            tableData.forEach((row, index) => {
+                if (row.imgUrl) {
+                    var imgBase64 = row.imgUrl; // Replace with actual base64 data or fetch from URL
+                    doc.addImage(imgBase64, 'PNG', 10, finalY + 20 + index * 30, 50, 50); // Adjust position and size
+                }
+            });
+
+            doc.save("order_list.pdf");
+        });
+    });
+</script>
+</body>
+</html>
+

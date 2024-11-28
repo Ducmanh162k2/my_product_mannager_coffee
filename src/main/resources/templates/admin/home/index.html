@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin home</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">Chào mừng trở lại!</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Bảng điều khiển</a></li>
+                        <li class="breadcrumb-item active">Chào mừng trở lại!</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <!-- card -->
+            <div class="card card-h-100">
+                <!-- card body -->
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Tổng doanh số</span>
+                            <h4 class="mb-3">
+                                $<span class="counter-value" th:attr="data-target=${totalSales}"></span> VNĐ
+                            </h4>
+                            <div class="text-nowrap">
+                                <span class="badge bg-success-subtle text-success">+2,000,000VND</span>
+                                <span class="ms-1 text-muted font-size-13">Từ tuần trước</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-shrink-0 text-end dash-widget">
+                            <div id="mini-chart1" data-colors='["--bs-primary", "--bs-success"]' class="apex-charts"></div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <!-- card -->
+            <div class="card card-h-100">
+                <!-- card body -->
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Tổng số mặt hàng</span>
+                            <h4 class="mb-3">
+                                <span class="counter-value" th:attr="data-target=${totalItems}"></span> Mặt hàng
+                            </h4>
+                            <div class="text-nowrap">
+                                <span class="badge bg-danger-subtle text-danger">-29 Giao dịch</span>
+                                <span class="ms-1 text-muted font-size-13">Từ tuần trước</span>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 text-end dash-widget">
+                            <div id="mini-chart2" data-colors='["--bs-primary", "--bs-success"]' class="apex-charts"></div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col-->
+
+        <div class="col-xl-3 col-md-6">
+            <!-- card -->
+            <div class="card card-h-100">
+                <!-- card body -->
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Loại</span>
+                            <h4 class="mb-3">
+                                <span class="counter-value" ></span>4 loại
+                            </h4>
+                            <div class="text-nowrap">
+                                <span class="badge bg-success-subtle text-success">+ 0 loại</span>
+                                <span class="ms-1 text-muted font-size-13">từ tuần trước</span>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 text-end dash-widget">
+                            <div id="mini-chart3" data-colors='["--bs-primary", "--bs-success"]' class="apex-charts"></div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <!-- card -->
+            <div class="card card-h-100">
+                <!-- card body -->
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Đặt hàng giao hàng</span>
+                            <h4 class="mb-3">
+                                <span class="counter-value" th:attr="data-target=${orderDelivery}"></span>
+                            </h4>
+                            <div class="text-nowrap">
+                                <span class="badge bg-success-subtle text-success">+5.32%</span>
+                                <span class="ms-1 text-muted font-size-13">Từ tuần trước</span>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 text-end dash-widget">
+                            <div id="mini-chart4" data-colors='["--bs-primary", "--bs-success"]' class="apex-charts"></div>
+                        </div>
+                    </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+    </div><!-- end row-->
+
+    <div class="row">
+        <div class="col-xl-8">
+            <!-- card -->
+            <div class="card">
+                <!-- card body -->
+                <div class="card-body">
+                    <div class="d-flex flex-wrap align-items-center mb-4">
+                        <h5 class="card-title me-2">Doanh thu sản phầm bán chạy</h5>
+<!--                        <div class="ms-auto">-->
+<!--                            <div>-->
+<!--                                <button type="button" class="btn btn-soft-primary btn-sm">-->
+<!--                                    ALL-->
+<!--                                </button>-->
+<!--                                <button type="button" class="btn btn-soft-secondary btn-sm">-->
+<!--                                    1M-->
+<!--                                </button>-->
+<!--                                <button type="button" class="btn btn-soft-secondary btn-sm">-->
+<!--                                    6M-->
+<!--                                </button>-->
+<!--                                <button type="button" class="btn btn-soft-secondary btn-sm">-->
+<!--                                    1Y-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+
+                    <div class="row align-items-center">
+                        <div class="col-xl-8">
+                            <div>
+                                <div id="market-overview" data-colors='["--bs-primary", "--bs-success"]' class="apex-charts"></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="p-4">
+                                <div th:each="product, stat : ${getTopRevenue}" class="mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm m-auto">
+                                            <span class="avatar-title rounded-circle bg-light text-dark font-size-13" th:text="${stat.index + 1}"></span>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <span class="font-size-14" th:text="${product.name}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 pt-2">
+                                    <a href="#" class="btn btn-primary w-100">Xem tất cả số dư <i
+                                            class="mdi mdi-arrow-right ms-1"></i></a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end row-->
+
+        <div class="col-xl-4">
+            <!-- card -->
+            <div class="card">
+                <!-- card body -->
+                <div class="card-body">
+                    <div class="d-flex flex-wrap align-items-center mb-4">
+                        <h5 class="card-title me-2">Bán theo địa điểm</h5>
+                        <div class="ms-auto">
+                            <div class="dropdown">
+                                <a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="text-muted font-size-12">Sắp xếp:</span> <span class="fw-medium">Huyện<i class="mdi mdi-chevron-down ms-1"></i></span>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                                    <a class="dropdown-item" href="#">Đan Phượng</a>
+                                    <a class="dropdown-item" href="#">Hoài Đức</a>
+                                    <a class="dropdown-item" href="#">Phúc Thọ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sales-by-locations" data-colors='["--bs-success"]' style="height: 253px"></div>
+
+                    <div class="px-2 py-2">
+                        <p class="mb-1">Đan Phượng <span class="float-end">75%</span></p>
+                        <div class="progress mt-2" style="height: 6px;">
+                            <div class="progress-bar progress-bar-striped bg-primary" role="progressbar"
+                                 style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="75">
+                            </div>
+                        </div>
+
+                        <p class="mt-3 mb-1">Hoài Đức <span class="float-end">55%</span></p>
+                        <div class="progress mt-2" style="height: 6px;">
+                            <div class="progress-bar progress-bar-striped bg-primary" role="progressbar"
+                                 style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="55">
+                            </div>
+                        </div>
+
+                        <p class="mt-3 mb-1">Phúc Thọ <span class="float-end">85%</span></p>
+                        <div class="progress mt-2" style="height: 6px;">
+                            <div class="progress-bar progress-bar-striped bg-primary" role="progressbar"
+                                 style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="85">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card body -->
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row-->
+
+</div>
+
+</body>
+</html>

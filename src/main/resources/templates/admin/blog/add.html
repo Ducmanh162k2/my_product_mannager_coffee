@@ -1,0 +1,253 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{layouts/admin_layout}"-->
+<!--      lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Add new blog</title>-->
+<!--    &lt;!&ndash;web fonts&ndash;&gt;-->
+<!--    <link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800" rel="stylesheet">-->
+<!--    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">-->
+<!--    &lt;!&ndash;summernote&ndash;&gt;-->
+<!--    <link th:href="@{/assets/summernote/bootstrap.min.css}" rel="stylesheet">-->
+<!--    &lt;!&ndash;summernote&ndash;&gt;-->
+<!--    <link th:href="@{/assets/summernote/summernote-bs4.css}" rel="stylesheet">-->
+
+<!--    src-->
+<!--</head>-->
+<!--<body>-->
+<!--<div layout:fragment="content">-->
+<!--    &lt;!&ndash; start page title &ndash;&gt;-->
+<!--    <div class="row">-->
+<!--        <div class="col-12">-->
+<!--            <div class="page-title-box d-sm-flex align-items-center justify-content-between">-->
+<!--                <h4 class="mb-sm-0 font-size-18">Add Blog</h4>-->
+
+<!--                <div class="page-title-right">-->
+<!--                    <ol class="breadcrumb m-0">-->
+<!--                        <li class="breadcrumb-item"><a th:href="@{/admin/product}">Blogs</a></li>-->
+<!--                        <li class="breadcrumb-item active">Add Blog</li>-->
+<!--                    </ol>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; end page title &ndash;&gt;-->
+
+<!--    <div class="row">-->
+<!--        <div class="col-12">-->
+<!--            <div class="card">-->
+<!--                <div class="card-header">-->
+<!--                    <h4 class="card-title">Blog Information</h4></div>-->
+<!--                <div class="card-body">-->
+<!--                    <form id="blog-form" th:action="@{/admin/blog/add}" th:object="${blog}"-->
+<!--                          enctype="multipart/form-data" method="post">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-sm-6">-->
+<!--                                <div class="mb-3">-->
+<!--                                    <label for="productname">Blog name:</label>-->
+<!--                                    <input th:field="*{name}" id="productname" name="productname" type="text"-->
+<!--                                           class="form-control">-->
+<!--                                    <div style="text-align: left; margin-top: 13px">-->
+<!--                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+<!--                            <div class="col-sm-6">-->
+<!--                                <div class="mb-3">-->
+<!--                                    <label for="image">Background image:</label>-->
+<!--                                    <input required id="image" name="image" type="file" class="form-control">-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-xl-12">-->
+<!--                                <div class="card card-shadow mb-4">-->
+<!--                                    <div class="card-header border-0">-->
+<!--                                        <div class="custom-title-wrap bar-primary">-->
+<!--                                            <div style="color: #30373f; font-weight: 500" class="custom-title">Description: </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="card-body">-->
+<!--                                        <div id="summernote">Description here...</div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex flex-wrap gap-2">-->
+<!--                            <input type="submit" value="Save Changes" class="btn btn-primary waves-effect waves-light">-->
+<!--                            <a th:href="@{/admin/blog}" type="button"-->
+<!--                               class="btn btn-secondary waves-effect waves-light">Cancel</a>-->
+<!--                        </div>-->
+<!--                    </form>-->
+
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; end row &ndash;&gt;-->
+
+<!--    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>-->
+<!--    <script th:src="@{/assets/summernote/popper.min.js}"></script>-->
+<!--    <script th:src="@{/assets/summernote/bootstrap.min.js}"></script>-->
+<!--    <script th:inline="javascript">-->
+<!--        $(document).ready(function () {-->
+<!--            document.getElementById('blog-form').addEventListener('submit', function (e) {-->
+<!--                e.preventDefault();-->
+<!--                var description = $('#summernote').summernote('code')-->
+<!--                $('<input />').attr('type', 'hidden')-->
+<!--                    .attr('name', 'description')-->
+<!--                    .attr('value', description)-->
+<!--                    .appendTo('#blog-form');-->
+<!--                this.submit();-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+
+
+
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm blog mới</title>
+    <!-- web fonts -->
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+<!--    &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+<!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.1/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    &lt;!&ndash; Summernote CSS &ndash;&gt;-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="style/styleCss.css"/>-->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">Thêm Blog</h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a th:href="@{/admin/blog}">Bài viết</a></li>
+                        <li class="breadcrumb-item active">Thêm Blog</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Thông tin blog</h4>
+                </div>
+                <div class="card-body">
+                    <form id="blog-form" th:action="@{/admin/blog/add}" th:object="${blog}" enctype="multipart/form-data" method="post">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="productname">Tên Blog:</label>
+                                    <input th:field="*{name}" id="productname" name="productname" type="text" class="form-control">
+                                    <div style="text-align: left; margin-top: 13px">
+                                        <span class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="image">Hình nền:</label>
+                                    <input required id="image" name="image" type="file" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card card-shadow mb-4">
+                                    <div class="card-header border-0">
+                                        <div class="custom-title-wrap bar-primary">
+                                            <div style="color: #30373f; font-weight: 500" class="custom-title">Mô tả: </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <textarea id="summernote" type="text" class="form-control" name="description" placeholder="Description here..."></textarea>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <input type="submit" value="Lưu thay đổi" class="btn btn-primary waves-effect waves-light">
+                            <a th:href="@{/admin/blog}" type="button" class="btn btn-secondary waves-effect waves-light">Thoát</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- end row -->
+
+    <!-- jQuery -->
+<!--    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>-->
+
+<!--    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>-->
+
+<!--    &lt;!&ndash; Popper.js &ndash;&gt;-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>-->
+<!--    &lt;!&ndash; Bootstrap JS &ndash;&gt;-->
+<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.1/js/bootstrap.min.js"></script>-->
+<!--    &lt;!&ndash; Summernote JS &ndash;&gt;-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>-->
+<!--        <script th:inline="javascript">-->
+<!--            $(document).ready(function () {-->
+<!--                document.getElementById('blog-form').addEventListener('submit', function (e) {-->
+<!--                    e.preventDefault();-->
+<!--                    var description = $('#summernote').summernote('code')-->
+<!--                    $('<input />').attr('type', 'hidden')-->
+<!--                        .attr('name', 'description')-->
+<!--                        .attr('value', description)-->
+<!--                        .appendTo('#blog-form');-->
+<!--                    this.submit();-->
+<!--                });-->
+<!--            });-->
+<!--        </script>-->
+
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Description here...',
+            tabsize: 2,
+            height: 300
+        });
+    </script>
+
+
+
+
+</div>
+</body>
+</html>
+
+
+

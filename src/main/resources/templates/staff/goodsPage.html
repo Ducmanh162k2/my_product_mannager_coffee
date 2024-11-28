@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FOOD List</title>
+    <link rel="stylesheet" th:href="@{/staff_assets/layuiadmin/layui/css/layui.css}" href="../../staff_assets/static/layui/css/layui.css"
+          media="all"/>
+    <style>
+        body {
+            margin: 10px;
+            background: #eeeeee;
+        }
+
+        .flow-default {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            font-size: 0;
+        }
+
+        .flow-default li {
+            display: inline-block;
+            margin: 10px 1%;
+            font-size: 14px;
+            width: 18%;
+            height: 280px;
+            background-color: #FFFFFF;
+            border-radius: 4px
+        }
+
+        .flow-default img {
+            width: 88%;
+            height: 100%;
+            border-radius: 4px
+        }
+
+        .flow-default .div-img {
+            height: 70%;
+            line-height: 70%;
+            padding: 10px 0px 4px 0px;
+            text-align: center;
+        }
+
+        .flow-default .content {
+            height: 20%;
+            width: 88%;
+            padding: 0px 6%;
+        }
+
+        .flow-default .content li {
+            width: 100%;
+            height: 50%;
+            line-height: 30px;
+            margin: 0px;
+            text-align: left;
+            border-radius: 0px;
+            overflow: hidden;
+            font-size: 16px;
+        }
+
+        .site-demo-flow img {
+            width: 40%;
+            height: 200px;
+            margin: 0 2px 5px 0;
+            border: none;
+        }
+
+        .store {
+            float: left;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<ul class="layui-card  flow-default" id="content" style="background:#eeeeee">
+
+</ul>
+<script th:src="@{/staff_assets/layuiadmin/layui/layui.js}" src="../../static/staff_assets/layuiadmin/layui/layui.js"></script>
+
+<script th:inline="javascript">
+    var Jquery;
+
+    function clearChoice(id) {
+        var goodsItems = Jquery("#content").children("li");
+        for (var i = 0; i < goodsItems.size(); i++) {
+            var item = goodsItems[i];
+            var pid = Jquery(item).find("input[name='id']").val();
+            if (pid === id) {
+                Jquery(item).find(".chickClick").css({"background": "none", "color": "#AF2825"});
+            }
+        }
+    }
+    function clearAllChoice() {
+        var goodsItems = Jquery("#content").children("li");
+        for (var i = 0; i < goodsItems.size(); i++){
+            var item = goodsItems[i];
+            Jquery(item).find(".chickClick").css({"background": "none", "color": "#AF2825"});
+        }
+    }
+    layui.use(['flow', "jquery", "layer"], function () {
+        var flow = layui.flow;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        Jquery = $;
+        var pageSize = 10;
+        flow.load({
+            elem: '#content' //
+            , done: function (pageNum, next) { //
+                //
+                setTimeout(function () {
+                    var lis = [];
+                    console.log("pageNum", pageNum);
+                    $.ajax({
+                        type: 'POST'
+                        , url: '/staff/table/goodslist.do'
+                        , data: {
+                            pageNum: pageNum,
+                            pageSize: pageSize,
+                            categoryId: [[${categoryId}]]
+                        }
+                        , dataType: "JSON"
+                        , success: function (res) {
+                            if (res.code == 200) {
+                                var infos = res.data;
+                                console.log("infos", infos);
+                                layui.each(infos, function (index, item) {
+                                    html = parseHtml(item);
+                                    lis.push(html);
+                                });
+                                var pages = parseInt(((res.count - 1) / pageSize)) + 1;
+                                console.log("pages", pages);
+                                next(lis.join(''), pageNum < pages); // 10
+                            } else {
+                                layer.alert(res.msg, {
+                                    title: 'Submit'
+                                    , anim: 6
+                                });
+                            }
+                        }
+                    })
+
+                    // function parseHtml(info) {
+                    //     var html = '<li class="goods-item">' +
+                    //         '<input type="hidden" name="id" value="' + info["id"] + '">' +
+                    //         '<input type="hidden" name="quantity" value="' + info["quantity"] + '">' +
+                    //         '<input type="hidden" name="soldState" value="' + 0 + '">' +
+                    //         '<div class="div-img"><img src="/product-images/'+ info["id"] + '/' + info["image"] + '"></div>' +
+                    //         '<ul class="content">' +
+                    //         '<li class="name">' + info["name"] + '</li>' +
+                    //         '<li style="color: #AF2825"><b style="float: left">VND</b>' +
+                    //         '<span style="float: left" class="price">' + info["price"] + '</span>' +
+                    //         '<b style="margin-left: 10px" class="store">Còn lại:&nbsp</b><span class="storeCount store" style="float: left">' + info["quantity"] + '</span><b class="store"></b>' +
+                    //         '<button class="layui-btn layui-btn-primary chickClick" style="display:inline-block;float:right;width:60px;font-size:12px;padding:0px 4px;color:#AF2825;height:28px;line-height:28px;text-align:center;border-radius:25px;border: 1px solid #AF2825;">chọn</button>' +
+                    //         '</li>' +
+                    //         '</ul>' +
+                    //         '</li>'
+                    //     return html;
+                    // }
+
+                    function parseHtml(info) {
+                        if (info === null || info === undefined) {
+                            console.error("Info object is null or undefined");
+                            return ''; // Return an empty string or handle this case as needed
+                        }
+
+                        var html = '<li class="goods-item">';
+
+                        if (info["id"] !== null && info["id"] !== undefined) {
+                            html += '<input type="hidden" name="id" value="' + info["id"] + '">';
+                        }
+                        if (info["quantity"] !== null && info["quantity"] !== undefined) {
+                            html += '<input type="hidden" name="quantity" value="' + info["quantity"] + '">';
+                        }
+                        html += '<input type="hidden" name="soldState" value="' + 0 + '">';
+
+                        if (info["id"] !== null && info["id"] !== undefined && info["image"] !== null && info["image"] !== undefined) {
+                            html += '<div class="div-img"><img src="/client_assets/product-images/'+ info["id"] + '/' + info["image"] + '"></div>';
+                        }
+
+                        html += '<ul class="content">';
+
+                        if (info["name"] !== null && info["name"] !== undefined) {
+                            html += '<li class="name">' + info["name"] + '</li>';
+                        }
+
+                        html += '<li style="color: #AF2825">';
+                        html += '<b style="float: left">VND</b>';
+
+                        if (info["price"] !== null && info["price"] !== undefined) {
+                            html += '<span style="float: left" class="price">' + info["price"] + '</span>';
+                        }
+
+                        if (info["quantity"] !== null && info["quantity"] !== undefined) {
+                            html += '<b style="margin-left: 10px" class="store">Còn Lại:&nbsp</b>';
+                            html += '<span class="storeCount store" style="float: left">' + info["quantity"] + '</span>';
+                            html += '<b class="store"></b>';
+                        }
+
+                        html += '<button class="layui-btn layui-btn-primary chickClick" style="display:inline-block;float:right;width:60px;font-size:12px;padding:0px 4px;color:#AF2825;height:28px;line-height:28px;text-align:center;border-radius:25px;border: 1px solid #AF2825;">Chọn</button>';
+                        html += '</li>';
+                        html += '</ul>';
+                        html += '</li>';
+
+                        return html;
+                    }
+
+
+
+                    //，：“”，
+                    //pagesAjax，，
+                }, 500);
+            }
+        })
+        //flow.lazyimg();
+        //body .chickClick
+        $("body").on("click", ".chickClick", function (e) {
+            var goodsItem = $(this).parents(".goods-item")[0];
+            var soldState = $(goodsItem).find("input[name='soldState']").val();//
+            console.log("soldState", soldState);
+            if (soldState == '1') {
+                layer.msg("HẾT HÀNG！", {icon: 5});
+                return;
+            }
+            $(this).css({"background-color": "#AF2825", "color": "#ffffff"});
+            if ($(this).css("background-color") === "rgb(175, 40, 37)") {
+                layer.msg("Sản phẩm này đã được chọn!", {icon: 6});
+                return;
+            }
+            var price = $(goodsItem).find(".price").text();
+            var id = $(goodsItem).find("input[name='id']").val();
+          //  var quantity = $(goodsItem).find(".quantity").text();
+            var quantity =  $(goodsItem).find("input[name='quantity']").val();
+            var img = $(goodsItem).find("img").attr("src");
+            var name = $(goodsItem).find(".name").text();
+            var products = new Products(price, img, id, name,quantity);
+            parent.addGoodsByOrder(products);
+        });
+
+        function Products(price, img, id, name,quantity) {
+            this.price = price;
+            this.img = img;
+            this.id = id;
+            this.name = name;
+            this.quantity = quantity;
+        }
+    });
+</script>
+</body>
+</html>

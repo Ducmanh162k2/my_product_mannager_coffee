@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      lang="en">
+<head>
+    <meta charset="UTF-8" http-equiv="refresh" content="15">
+    <title>Table Page</title>
+    <link rel="stylesheet" th:href="@{/staff_assets/layuiadmin/layui/css/layui.css}" href="../../static/staff_assets/layui/css/layui.css"
+          media="all"/>
+    <style>
+        * {
+            margin: 0px
+        }
+
+        body {
+            font-family:"";
+        }
+
+        .nav {
+            font-size: 20px;
+            line-height: 30px;
+            text-align: center;
+            background: #393D49;
+            color: #ffffff;
+            padding: 20px 0px;
+        }
+
+        .statue {
+            font-size: 14px;
+            position: relative;
+            left: -42px;
+            top: 46px;
+        }
+
+        .people {
+            font-size: 14px;
+            position: relative;
+            left: 40px;
+            top: 117px;
+        }
+
+        .desk_code {
+            font-size: 48px;
+            position: relative;
+            top: 10px;
+        }
+
+        .color1 {
+            color: #0C0C0C;
+            background: #F8F8F8;
+        }
+
+        .color2 {
+            color: #FFFFFF;
+            background: #65cc33;
+        }
+        .color3 {
+            color: #FFFFFF;
+            background: #FF5722;
+        }
+        .con {
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .c_con {
+            overflow: hidden;
+            width: 1200px;
+            position: relative;
+            left: 50%;
+            margin-left: -600px;
+            text-align: center;
+        }
+
+        .desk {
+            float: left;
+            width: 140px;
+            height: 140px;
+            border-radius: 4%;
+            margin: 15px 50px;
+            overflow: hidden;
+        }
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-card nav">
+    <a th:href="@{/}" class="btn btn-success" style="color: white ; margin-right: 1000px">Quay lại Trang chủ</a>
+    <span class="title">
+        Vui lòng chọn bàn
+    </span>
+</div>
+<div class="con">
+    <div class="c_con" id="c_con">
+        <th:block th:each="tableBooking : ${tables}">
+            <th:block th:if="${tableBooking.status == 0}">
+                <div class="desk color1 click" style="text-align:center;">
+                    <input type="hidden" name="deskId" th:value="${tableBooking.tableId}">
+                    <div class="people"><span th:text="${tableBooking.peopleCount}"></span><span> Người</span></div>
+                    <div class="desk_code" th:text="${tableBooking.tableCode}"></div>
+                    <div class="statue">
+                        <input type="hidden" th:value="${tableBooking.status}">
+                        --Bàn trống
+                    </div>
+                </div>
+            </th:block>
+            <th:block th:if="${tableBooking.status == 1}">
+                <div class="desk color2 click" style="text-align:center;">
+                    <input type="hidden" name="deskId" th:value="${tableBooking.tableId}">
+                    <div class="people"><span th:text="${tableBooking.peopleCount}"></span><span> Người</span></div>
+                    <div class="desk_code" th:text="${tableBooking.tableCode}"></div>
+                    <div class="statue">
+                        <input type="hidden" th:value="${tableBooking.status}">
+                        Đang dùng
+                    </div>
+                </div>
+            </th:block>
+            <th:block th:if="${tableBooking.status == 2}">
+                <div class="desk color3 click" style="text-align:center;">
+                    <input type="hidden" name="deskId" th:value="${tableBooking.tableId}">
+                    <div class="people"><span th:text="${tableBooking.peopleCount}"></span><span> Người</span></div>
+                    <div class="desk_code" th:text="${tableBooking.tableCode}"></div>
+                    <div class="statue">
+                        <input type="hidden" th:value="${tableBooking.status}">
+                        --Đang dọn
+                    </div>
+                </div>
+            </th:block>
+        </th:block>
+    </div>
+</div>
+<div class="footer">
+    <div id="test1"></div>
+</div>
+</body>
+<script th:src="@{/staff_assets/layuiadmin/layui/layui.js}" src="../../static/staff_assets/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['jquery', 'layer', 'laypage'], function(){
+        var $ = layui.$,
+            layer = layui.layer,
+            laypage = layui.laypage;
+        var totalNum = [[${totalItems}]];
+        var limit = 15;
+        var currentPage = [[${currentPage}]];
+
+        $(".click").click(function (){
+            var deskState = $(this).find(".statue input").val();
+            var deskCode = $(this).find(".desk_code").text();
+            if(deskState == 0){
+                $.ajax({
+                    url:'/staff/table/login',
+                    type:'POST',
+                    dataType:'json',
+                    data:{
+                        "deskCode": deskCode
+                    },
+                    success:function (res) {
+                        if(res.code == 200){
+                            layer.msg("Đăng nhập thành công!");
+                            location = "/staff/table/main";
+                        } else {
+                            layer.msg(res.msg, {icon: 5});
+                        }
+                    }
+                });
+            } else {
+               // layer.msg("NOT AVAILABLE!", {icon: 5});
+                layer.confirm(
+                    "Do you want change status to Available!" , {icon:1, title:'Confirm'},
+                    function(index) {
+                        $.ajax({
+                            url:'/staff/table/updateStatus',
+                            type:'POST',
+                            dataType:'json',
+                            data:{
+                                "deskCode": deskCode
+                            },
+                            success:function (res) {
+                                if(res.code == 200){
+                                    layer.msg("Cập nhật thành công",{icon:1});
+                                    setTimeout(function () {
+                                        location.reload();
+                                    },1000);
+                                } else {
+                                    layer.msg(res.msg, {icon: 5});
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    }
+                );
+            }
+        });
+
+        laypage.render({
+            elem: 'test1',
+            count: totalNum,
+            limit: limit,
+            curr: currentPage,
+            theme: '#393D49',
+            jump: function (obj, first){
+                if (!first) {
+                    location = "/staff/table/desklist?pageNum=" + obj.curr;
+                   // location.href = '/staff/table/desklist/'+obj.curr;
+                }
+            }
+        });
+    });
+</script>
+</html>

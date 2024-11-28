@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin_layout}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order manager</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0 font-size-18">Orders</h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a th:href="@{/admin}">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Đơn hàng</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+
+    <!-- Filter Form -->
+    <form th:action="@{/admin/order/export}" method="get">
+        <div class="row mb-2">
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="search" placeholder="Tìm kiếm theo Địa chỉ hoặc ID..." />
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" name="status">
+                    <option value="">Trạng thái</option>
+                    <option value="0">Chưa giải quyết</option>
+                    <option value="1">Đã xác nhận</option>
+                    <option value="2">Đã vận chuyển</option>
+                    <option value="3">Hoàn thành</option>
+                </select>
+            </div>
+            <div class="col-sm-3" style="margin-right: -25px">
+                <input type="date" class="form-control" name="startDate" placeholder="Ngày bắt đầu" />
+            </div>
+            <div class="col-sm-3">
+                <input type="date" class="form-control" name="endDate" placeholder="Ngày kết thúc" />
+            </div>
+            <div class="col-sm-1">
+                <button type="submit" class="btn btn-primary">Xuất sang Excel</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-8">
+                        </div><!-- end col-->
+                    </div>
+
+                    <!---------datatable-------------------------------------------------------->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br /><br />
+                            <table class="table table-hover table-responsive" id="orders">
+                                <thead>
+                                <tr>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span>ID</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span>Ngày mua</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span>Địa chỉ</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span>Phương thức thanh toán</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span>Tổng tiền </th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span>Xem chi tiết</th>
+                                    <th class="align-middle"><span class="fa fa-location-arrow"></span>Hoạt động</th>
+                                    <!--                    <th>-->
+                                    <!--                      <a asp-controller="Admin" asp-action="AddTrip" class="btn btn-link">-->
+                                    <!--                        <span class="fa fa-plus fa-fw  text-info"></span> Add New Trip-->
+                                    <!--                      </a>-->
+                                    <!--                    </th>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="order: ${orders}">
+                                    <td><a class="text-body fw-bold"><span th:text="${order.id}"></span></a></td>
+                                    <td th:text="${#dates.format(order.date_purchase, 'dd/MM/yyyy')}"></td>
+                                    <td th:text="${order.address}"></td>
+                                    <td th:if="${order.payment == true}"><i class="fab fa-cc-paypal me-1"></i>Paypal</td>
+                                    <td th:if="${order.payment == false}"><i class="fas fa-money-bill-alt me-1"></i>Cash
+                                    </td>
+                                    <td><span
+                                            th:text="${#numbers.formatDecimal(order.total_money, 0, 'COMMA', 0, 'POINT')}"></span>
+                                        VNĐ
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm btn-rounded"
+                                           th:href="@{/admin/order/details/{id}(id=${order.id})}">
+                                            Xem chi tiết
+                                        </a>
+                                    </td>
+                                    <td th:if="${order.status_order.id == 0}">
+                                        <a style="font-size: 14px" class="badge badge-pill bg-danger-subtle text-danger"
+                                           th:text="${order.status_order.name}">
+                                        </a>
+                                    </td>
+                                    <td th:if="${order.status_order.id == 1}">
+                                        <a th:href="@{/admin/order/confirm_order/{id}(id=${order.id})}"
+                                           onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này không?')"
+                                           style="color:#1c84ee; background-color: #d1e0fb; font-size: 14px">
+                                            <i style="font-size: 20px" class="bx bx-check"></i>
+                                            Xác nhận đơn hàng
+                                        </a>
+                                    </td>
+                                    <td th:if="${order.status_order.id == 2}">
+                                        <a style="font-size: 14px" th:href="@{/admin/order/confirm_shipped/{id}(id=${order.id})}"
+                                           onclick="return confirm('Are you sure you want to confirm this order?')"
+                                           class="badge badge-pill bg-warning-subtle text-warning ">
+                                            <i style="font-size: 20px" class="bx bx-check"></i>
+                                            Xác nhận đã giao hàng
+                                        </a>
+                                    </td>
+                                    <td th:if="${order.status_order.id == 3}">
+                                        <a style="font-size: 14px"class="badge badge-pill bg-success-subtle text-success">
+                                            <i style="font-size: 20px" class="bx bx-check"></i>
+                                            Hoàn thành
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+<!--                    <div class="table-responsive">-->
+<!--                        <table class="table align-middle table-nowrap table-check">-->
+<!--                            <thead class="table-light">-->
+<!--                            <tr>-->
+<!--                                <th class="align-middle">ID</th>-->
+<!--                                <th class="align-middle">Date purchase</th>-->
+<!--                                <th class="align-middle">Address</th>-->
+<!--                                <th class="align-middle">Payment method</th>-->
+<!--                                <th class="align-middle">Total money</th>-->
+<!--                                <th class="align-middle">View details</th>-->
+<!--                                <th class="align-middle">Action</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            <tr th:each="order: ${orders}">-->
+<!--                                <td><a class="text-body fw-bold">#<span th:text="${order.id}"></span></a></td>-->
+<!--                                <td th:text="${#dates.format(order.date_purchase, 'dd/MM/yyyy')}"></td>-->
+<!--                                <td th:text="${order.address}"></td>-->
+<!--                                <td th:if="${order.payment == true}"><i class="fab fa-cc-paypal me-1"></i>Paypal</td>-->
+<!--                                <td th:if="${order.payment == false}"><i class="fas fa-money-bill-alt me-1"></i>Cash-->
+<!--                                </td>-->
+<!--                                <td><span-->
+<!--                                        th:text="${#numbers.formatDecimal(order.total_money, 0, 'COMMA', 0, 'POINT')}"></span>-->
+<!--                                    VNĐ-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    <a class="btn btn-primary btn-sm btn-rounded"-->
+<!--                                       th:href="@{/admin/order/details/{id}(id=${order.id})}">-->
+<!--                                        View Details-->
+<!--                                    </a>-->
+<!--                                </td>-->
+<!--                                <td th:if="${order.status_order.id == 0}">-->
+<!--                                    <a style="font-size: 14px" class="badge badge-pill bg-danger-subtle text-danger"-->
+<!--                                        th:text="${order.status_order.name}">-->
+<!--                                    </a>-->
+<!--                                </td>-->
+<!--                                <td th:if="${order.status_order.id == 1}">-->
+<!--                                    <a th:href="@{/admin/order/confirm_order/{id}(id=${order.id})}"-->
+<!--                                       onclick="return confirm('Are you sure you want to confirm this order?')"-->
+<!--                                       style="color:#1c84ee; background-color: #d1e0fb; font-size: 14px">-->
+<!--                                        <i style="font-size: 20px" class="bx bx-check"></i>-->
+<!--                                        Confirm order-->
+<!--                                    </a>-->
+<!--                                </td>-->
+<!--                                <td th:if="${order.status_order.id == 2}">-->
+<!--                                    <a style="font-size: 14px" th:href="@{/admin/order/confirm_shipped/{id}(id=${order.id})}"-->
+<!--                                       onclick="return confirm('Are you sure you want to confirm this order?')"-->
+<!--                                       class="badge badge-pill bg-warning-subtle text-warning ">-->
+<!--                                        <i style="font-size: 20px" class="bx bx-check"></i>-->
+<!--                                        Confirm shipped-->
+<!--                                    </a>-->
+<!--                                </td>-->
+<!--                                <td th:if="${order.status_order.id == 3}">-->
+<!--                                    <a style="font-size: 14px"class="badge badge-pill bg-success-subtle text-success">-->
+<!--                                        <i style="font-size: 20px" class="bx bx-check"></i>-->
+<!--                                            Complete-->
+<!--                                    </a>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                    <div th:if = "${totalPages > 1}">-->
+<!--                        <div class = "row col-sm-11">-->
+<!--                            <div class = "col-sm-2">-->
+<!--                                Total Items: [[${totalItems}]]-->
+<!--                            </div>-->
+<!--                            <div class = "col-sm-2">-->
+<!--					            <span th:each="i: ${#numbers.sequence(1, totalPages)}">-->
+<!--                                    <a th:if="${currentPage != i}" th:href="@{'/admin/order/page/' + ${i}}">[[${i}]]</a>-->
+<!--						        <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;-->
+<!--					            </span>-->
+<!--                            </div>-->
+<!--                            <div class = "col-sm-1">-->
+<!--                                <a th:if="${currentPage < totalPages}" th:href="@{'/admin/order/page/' + ${currentPage + 1}}">Next</a>-->
+<!--                                <span th:unless="${currentPage < totalPages}">Next</span>-->
+<!--                            </div>-->
+
+<!--                            <div class="col-sm-1">-->
+<!--                                <a th:if="${currentPage < totalPages}" th:href="@{'/admin/order/page/' + ${totalPages}}">Last</a>-->
+<!--                                <span th:unless="${currentPage < totalPages}">Last</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+    <script th:inline="javascript">
+    </script>
+</div>
+
+</body>
+</html>
